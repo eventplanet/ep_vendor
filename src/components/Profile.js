@@ -7,7 +7,10 @@ import init from './../firebase'
 import { useUserAuth } from '../context/UserAuthContext';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import './Profile.css'
 const Profile = () => {
+    const [edit, setEdit] = useState(false)
+    console.log(edit)
     const [loading, setLoading] = useState(true);
     const { user } = useUserAuth();
     const merchant_id = user.uid;
@@ -29,7 +32,11 @@ const Profile = () => {
         email: '',
         mobno: '',
         gst: '',
-        workingSince: ''
+        workingSince: '',
+        contactPersonName: '',
+        fb: '',
+        insta: '',
+        introduction: ''
     })
 
     const getSingleDocumentHandler = async () => {
@@ -109,7 +116,12 @@ const Profile = () => {
             email,
             mobno,
             gst,
-            workingSince } = data;
+            workingSince,
+            contactPersonName,
+            fb,
+            insta,
+            introduction
+        } = data;
         e.preventDefault();
         if (country_id != '' && state_id != '' && city_id != '' && pincode != '' && email != '' && mobno != '' && workingSince != '') {
             try {
@@ -126,7 +138,11 @@ const Profile = () => {
                         email,
                         mobno,
                         gst: gst || '',
-                        workingSince
+                        workingSince,
+                        contactPersonName: contactPersonName || '',
+                        fb: fb || '',
+                        insta: insta || '',
+                        introduction: introduction || ''
                     }
                 }, { merge: true });
                 toast.success('Profile Updated Successfully');
@@ -141,7 +157,11 @@ const Profile = () => {
                     email: '',
                     mobno: '',
                     gst: '',
-                    workingSince: ''
+                    workingSince: '',
+                    contactPersonName: '',
+                    fb: '',
+                    insta: '',
+                    introduction: ''
                 })
 
             } catch (err) {
@@ -151,12 +171,7 @@ const Profile = () => {
             toast.error('Please fill all the mendatary field')
         }
     }
-    const stateHandler = (e) => {
-        const state_id = e.target.value;
-        const updatedCity = city.filter(prev => prev.state_id === state_id);
-        console.log('Current City State Wise ', updatedCity)
-        // setCity(updatedCity);
-    }
+
     return (
         <div className="page-wrapper">
             <div className="container-fluid">
@@ -164,7 +179,7 @@ const Profile = () => {
                     <div className="col-md-12">
                         <div className="card">
                             <div className='card-header bg-white'>
-                                <h3>Product Information</h3>
+                                <h3>Profile</h3>
                             </div>
                             <div className='card-body'>
                                 {
@@ -220,7 +235,7 @@ const Profile = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className='col-md-4'>
-                                                                            <button className='btn '>Submit</button>
+                                                                            <button className='btn btn-primary'>Submit</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -234,13 +249,15 @@ const Profile = () => {
                                                         </div>
                                                         <div className='row'>
                                                             <div className='col-md-12'>
-                                                                <h3>Complete Your Business Profile</h3>
+                                                                <div className='d-flex justify-content-between'>
+                                                                    <h3>Complete Your Business Profile</h3> <button className='btn btn-primary btn-sm' onClick={() => setEdit(!edit)}><i className='fa fa-edit' ></i> Edit</button>
+                                                                </div>
 
                                                                 <form className='py-3'>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Country<span className='text-danger'>*</span></label>
-                                                                            <select className='form-control' name="country_id" onChange={formHandler} >
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="country_id" onChange={formHandler}>
                                                                                 <option>Select Country</option>
                                                                                 {
                                                                                     country?.map((item, index) => {
@@ -253,7 +270,7 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>State<span className='text-danger'>*</span></label>
-                                                                            <select className='form-control' name="state_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="state_id" onChange={formHandler}>
                                                                                 <option>Select State</option>
                                                                                 {
                                                                                     state.filter((pre) => pre.country_id === data.country_id).map((item, index) => {
@@ -268,7 +285,7 @@ const Profile = () => {
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>City<span className='text-danger'>*</span></label>
-                                                                            <select className='form-control' name="city_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="city_id" onChange={formHandler}>
                                                                                 <option>Select City</option>
                                                                                 {
                                                                                     city.filter((pre) => pre.state_id === data.state_id).map((item, index) => {
@@ -281,13 +298,13 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Pincode<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className='form-control' />
+                                                                            <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Locality<span className='text-danger'>*</span></label>
-                                                                            <select className='form-control' name="locality_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="locality_id" onChange={formHandler}>
                                                                                 <option>Select Locality</option>
                                                                                 {
                                                                                     locality.filter((pre) => pre.city_id === data.city_id).map((item, index) => {
@@ -301,38 +318,56 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Street</label>
-                                                                            <input type="text" name="street" placeholder="Street Address" className='form-control' value={data.street} onChange={formHandler} />
+                                                                            <input type="text" name="street" placeholder="Street Address" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.street} onChange={formHandler} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Landmark</label>
                                                                             <input type="text" name="landmark" placeholder="Enter Landmark" value={data.landmark
-                                                                            } onChange={formHandler} className='form-control' />
+                                                                            } onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Email Address<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="email" className='form-control' value={data.email} onChange={formHandler} placeholder='Email Address' />
+                                                                            <input type="text" name="email" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.email} onChange={formHandler} placeholder='Email Address' />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Mobile Number<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className='form-control' />
+                                                                            <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>GST Number</label>
-                                                                            <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className='form-control' />
+                                                                            <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Working since<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className='form-control' />
+                                                                            <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                        </div>
+                                                                        <div className='form-group col-md-6 mb-3'>
+                                                                            <label style={{ color: '#41B0FA' }}>Contact Person Name</label>
+                                                                            <input type="text" name="contactPersonName" value={data.contactPersonName} onChange={formHandler} placeholder="Contact Person Name" className={`form-control ${!edit ? 'blur_input' : ''}`} />
                                                                         </div>
                                                                     </div>
+                                                                    <div className='row'>
+                                                                        <div className='form-group col-md-6 mb-3'>
+                                                                            <label style={{ color: '#41B0FA' }}>Facebook Link</label>
+                                                                            <input type="text" name="fb" value={data.fb} onChange={formHandler} placeholder="Facebook Link" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                        </div>
+                                                                        <div className='form-group col-md-6 mb-3'>
+                                                                            <label style={{ color: '#41B0FA' }}>Instagram Link</label>
+                                                                            <input type="text" name="insta" value={data.insta} onChange={formHandler} placeholder="Instagram Link" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='form-group'>
+                                                                        <label style={{ color: '#41B0FA' }}>Business Introduction</label>
+                                                                        <textarea className={`form-control ${!edit ? 'blur_input' : ''}`} name="introduction" onChange={formHandler} placeholder='Introduction'>{data.introduction}</textarea>
+                                                                    </div>
                                                                     <div className='form-group text-center'>
-                                                                        <button className='btn btn-primary' onClick={btnHandler}>Submit</button>
+                                                                        <button className='btn btn-primary' onClick={btnHandler} disabled={!edit}>Submit</button>
                                                                     </div>
 
                                                                 </form>

@@ -6,7 +6,11 @@ import Header from '../Header';
 import Footer from '../Footer';
 import 'react-toastify/dist/ReactToastify.css';
 import init from './../firebase'
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
+
 const Category = () => {
     const [show, setShow] = useState(false);
     const [curCat, setCurCat] = useState()
@@ -15,6 +19,7 @@ const Category = () => {
     let navigate = useNavigate();
     const [data, setData] = useState([]);
     const [subCategory, setSubCategory] = useState([])
+    const [loading, setLoading] = useState(true)
     console.log(data)
     const choiceHandler = (id) => {
         setCurCat(id)
@@ -22,9 +27,10 @@ const Category = () => {
         //navigate(`/create-profile/${id}`);
     }
     const getCategories = async () => {
-        const mycollection = collection(init.db, 'serviceCategories');
+        const mycollection = collection(init.db, 'categories');
         const data = await getDocs(mycollection);
         setData(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        setLoading(false)
     }
     const subCategories = async () => {
         const mycollection = collection(init.db, 'sub_categories');
@@ -50,7 +56,37 @@ const Category = () => {
                 <div className="container">
                     <div className="row py-5">
                         {
-                            data.map((data, i) => {
+                            loading && (
+                                <>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                    <div className="col-md-2 col-lg-3">
+                                        <Skeleton height={100} />
+                                    </div>
+                                </>
+                            )
+                        }
+                        {
+                            data.reverse(data).map((data, i) => {
                                 return (
                                     <div className="col-md-2 col-lg-3" onClick={() => choiceHandler(data.id)} key={i}>
                                         <div className="card m-2 p-2 text-center shadow-sm choice_section" style={{

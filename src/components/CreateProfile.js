@@ -8,10 +8,10 @@ import { doc, setDoc } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 const CreateProfile = () => {
     let { cat_id, sub_cat_id } = useParams();
-    console.log(`cat id is ${cat_id} and sub cat id is ${sub_cat_id}`)
+    //console.log(`cat id is ${cat_id} and sub cat id is ${sub_cat_id}`)
     let navigate = useNavigate();
     const [data, setData] = useState({
-        city: '',
+
         business_name: '',
         email: '',
         mobno: '',
@@ -26,10 +26,8 @@ const CreateProfile = () => {
     const btnHandler = async () => {
         // toast('Process to backend City '+data.city+' Business Name '+data.business_name+' Email '+data.email+'Mobile Number '+data.mobno);
         //navigate('/dashboard');   
-        const { city, business_name, email, mobno, password } = data;
-        if (city === '') {
-            toast.error('City field is required');
-        } else if (business_name === '') {
+        const { business_name, email, mobno, password } = data;
+        if (business_name === '') {
             toast.error('Business Name field is required');
         }
         else if (email === '') {
@@ -61,7 +59,6 @@ const CreateProfile = () => {
                         email,
                         mobno,
                         businessAddress: '',
-                        city,
                         status: false
                     },
                     serviceAndPricing: {
@@ -108,14 +105,7 @@ const CreateProfile = () => {
                         <div className="col-md-8 mx-auto">
                             <h3>Excellent! Lets Create An Outstanding Profile.</h3>
                             <form>
-                                <div className="form-floating mb-3">
-                                    <select name="city" onChange={formHandler} value={data.city} className="form-select">
-                                        <option >Select City</option>
-                                        <option value="lucknow">Lucknow</option>
-                                        <option value="mumbai">Mumbai</option>
-                                        <option value="prayagraj">Prayagraj</option>
-                                    </select>
-                                </div>
+
                                 <div className="form-floating mb-3">
                                     <input type="text" name="business_name" className="form-control" id="business_name" onChange={formHandler} value={data.business_name} placeholder="Your Brand/Business Name" />
                                     <label htmlFor="business_name">Your Brand/Business Name</label>
