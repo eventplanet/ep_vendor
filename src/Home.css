@@ -1,0 +1,242 @@
+.section {
+    background: rgba(23, 195, 178, 0.05);
+}
+
+.login_form {
+    padding: 50px;
+    background-color: #fff;
+    box-shadow: 0px 1px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.input {
+    height: 50px;
+    border: 0.5px solid red;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    border-radius: 102px;
+    border: 0.5px solid #0071BC;
+    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.input .icon {
+    width: 50px;
+    font-size: 22px;
+}
+
+.input input {
+    border: none;
+    outline: none;
+    width: 100%;
+}
+
+.login__screen .btn {
+    height: 40px;
+    width: 200px;
+    background: linear-gradient(270deg, #045A94 0%, rgba(0, 113, 188, 0.86) 100%);
+    border-radius: 68px;
+    color: #fff;
+}
+
+.sign_up {
+    margin-bottom: 50px;
+}
+
+.forget {
+    text-decoration: none;
+    color: #000;
+    float: right;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.input_box {
+    height: 50px;
+    border: 0.5px solid blue;
+    border-radius: 60px;
+    padding: 10px 20px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.input_box input {
+    border: none;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+}
+
+
+
+.complete {
+    border-left: 2px solid greenyellow;
+}
+
+.addBox {
+    height: 130px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 200px;
+    background: #18A0FB;
+    color: #000;
+    border-radius: 10px;
+    margin: 5px;
+    overflow: hidden;
+    color: #fff;
+}
+
+.img_box {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.img_box img {
+    height: 130px;
+    width: 100%;
+    border-radius: 10px;
+    transition: 0.4s;
+}
+
+.img_box img:hover {
+    transform: scale(1.1);
+    transition: 0.4s;
+    cursor: pointer;
+}
+
+.close_btn {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.presence {
+    background-color: #fff;
+    height: 40px;
+    width: 100%;
+    border-bottom: 0.5px solid #000;
+}
+
+.presence .icon {
+    display: flex;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+.presence input {
+    border: none;
+    outline: none !important;
+    box-shadow: none;
+}
+
+.presence input:focus {
+    outline: none !important;
+    box-shadow: none;
+}
+
+.main_container {
+    min-height: 100vh;
+    height: auto;
+}
+
+.choice_section {
+    cursor: pointer;
+}
+
+.choice_section:hover {
+    background: rgba(65, 176, 250, 0.3);
+}
+
+.custom-file-input::-webkit-file-upload-button,
+.profile_picture::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.custom-file-input::before {
+    content: 'Add New Work';
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+
+.profile_picture::before {
+    content: 'Add Profile Picture';
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+
+.custom-file-input:hover::before,
+.profile_picture:hover::before {
+    border-color: black;
+}
+
+.custom-file-input:active::before,
+.profile_picture:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.toggle_btn {
+    display: none;
+}
+
+@media only screen and (max-width: 768px) {
+    .toggle_btn {
+        display: block;
+    }
+}
+
+.hide {
+    display: none;
+}
+
+.form input[type='text'] {
+    border: none;
+    border-radius: 0;
+    border-bottom: 1px solid #000;
+    outline: none;
+    box-shadow: none;
+}
+
+.sub__cat__style {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sub__cat__style li {
+    padding: 5px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sub__cat__style li:hover {
+    transition: 0.2s;
+    background: rgba(65, 176, 250, 0.3);
+}

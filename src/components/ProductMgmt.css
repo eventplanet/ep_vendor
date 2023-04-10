@@ -1,0 +1,32 @@
+.label__style {
+    padding: 1rem 1.75rem !important;
+    color: #41B0FA;
+}
+
+.previousWork form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #1475cf;
+    height: 200px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.items {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid;
+    box-sizing: border-box !important;
+}
+
+.items:hover {
+    cursor: pointer;
+    background-color: #e7f0f7;
+    color: #41B0FA;
+    border: 2px solid #41B0FA;
+    box-sizing: border-box !important;
+}
