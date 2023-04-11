@@ -16,24 +16,19 @@ const Sidenavbar = () => {
       dropDown: [
         {
           title: "Profile",
-          icon: <MdDashboard className='my__nav__icon' />,
+          icon: < MdAccountBox className='my__nav__icon' />,
           href: 'profile'
         },
         {
-          title: "Previous Work",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'previous-work'
+          title: "Add Product",
+          icon: <MdOutlineLibraryAdd className='my__nav__icon' />,
+          href: 'add-product'
         },
         {
-          title: "Profile Picture",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'profile-picture'
+          title: "Product List",
+          icon: <MdOutlineViewList className='my__nav__icon' />,
+          href: 'product-list'
         },
-        {
-          title: 'Describe Business',
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'describe-business'
-        }
       ]
     },
     {
@@ -67,23 +62,7 @@ const Sidenavbar = () => {
           href: 'basic-details'
         },
       ]
-    },
-    {
-      title: "Product Management",
-      icon: <MdOutlineProductionQuantityLimits className='my__nav__icon' />,
-      dropDown: [
-        {
-          title: "Add Product",
-          icon: <MdOutlineLibraryAdd className='my__nav__icon' />,
-          href: 'add-product'
-        },
-        {
-          title: "Product List",
-          icon: <MdOutlineViewList className='my__nav__icon' />,
-          href: 'product-list'
-        },
-      ]
-    },
+    }
   ])
   return (
     <aside className="left-sidebar" data-sidebarbg="skin5" >
@@ -95,7 +74,7 @@ const Sidenavbar = () => {
             <li className="sidebar-item">
               <Link
                 className="sidebar-link waves-effect waves-dark sidebar-link"
-                to="/dashboard"
+                to="dash_board"
                 aria-expanded="false"
               ><MdDashboard size={23} style={{ display: 'inline-block', color: 'white', textAlign: 'center', width: '35px' }} /><span className="hide-menu">Dashboard</span></Link>
             </li>

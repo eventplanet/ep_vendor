@@ -8,13 +8,21 @@ import { useUserAuth } from '../context/UserAuthContext';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import './Profile.css'
+import { v4 as uuidv4 } from 'uuid';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import avatar from '../assets/avatar.png'
+import VenueTTK from './thingstoknow/VenueTTK';
 const Profile = () => {
     const [edit, setEdit] = useState(false)
-    console.log(edit)
+    const [progresspercent, setProgresspercent] = useState(0);
+    const [previousImgProgress, setPreviousImgProgress] = useState(0);
+    const [imgUrl, setImgUrl] = useState(null);
+    const [previousImgUrl, setPreviousImgUrl] = useState(null);
+    const [category, setCategory] = useState([])
+    const [subCategory, setSubCategories] = useState([])
     const [loading, setLoading] = useState(true);
     const { user } = useUserAuth();
     const merchant_id = user.uid;
-    console.log('Merchant ID', merchant_id)
     const auth = init.auth;
     const [merchant, setMerchant] = useState([]);
     const [country, setCountry] = useState([]);
@@ -39,6 +47,7 @@ const Profile = () => {
         introduction: ''
     })
 
+
     const getSingleDocumentHandler = async () => {
         try {
             console.log(`fetching document data  for merchant Id ${merchant_id}`)
@@ -50,9 +59,33 @@ const Profile = () => {
             console.log(`Error ${error} `)
         }
     }
+
+    const getCategories = async () => {
+        try {
+            const mycollection = collection(init.db, 'categories');
+            const data = await getDocs(mycollection);
+            setCategory(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        } catch (error) {
+            console.log(`Error ${error} `)
+        }
+    }
+
+    const getSubCategories = async () => {
+        try {
+            const mycollection = collection(init.db, 'sub_categories');
+            const data = await getDocs(mycollection);
+            setSubCategories(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        } catch (error) {
+            console.log(`Error ${error} `)
+        }
+    }
+    useEffect(() => {
+        getCategories()
+        getSubCategories()
+    }, [])
     useEffect(() => {
         getSingleDocumentHandler()
-    }, [])
+    }, [imgUrl, previousImgUrl])
     const getCountry = async () => {
         try {
             const mycollection = collection(init.db, 'countries');
@@ -96,6 +129,7 @@ const Profile = () => {
         getLocality()
         getSingleDocumentHandler()
     }, [merchant_id])
+
     const formHandler = (e) => {
 
         const name = e.target.name;
@@ -163,7 +197,7 @@ const Profile = () => {
                     insta: '',
                     introduction: ''
                 })
-
+                getSingleDocumentHandler()
             } catch (err) {
                 console.log(err)
             }
@@ -171,7 +205,85 @@ const Profile = () => {
             toast.error('Please fill all the mendatary field')
         }
     }
+    const imgUploader = (e) => {
+        console.log("Image process", e.target.files[0])
+        const file = e.target.files[0];
+        const fileExtension = file.name.split('.').pop();
+        // console.log('File name ' + file + 'fileExtension ' + fileExtension)
+        const storageRef = ref(init.storage, `${uuidv4()}.${fileExtension}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+            },
+            (err) => {
+                console.log(err);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log('Uploaded image', downloadURL)
+                    setImgUrl(downloadURL);
+                    updateSingleDocumentHandler(downloadURL);
+                    toast.success('Profile Picture Updated Successfully');
+                });
+            }
+        );
+    }
+    const updateSingleDocumentHandler = async (downloadURL) => {
+        try {
+            await setDoc(doc(init.db, "merchants", merchant_id), {
+                ...merchant,
+                profilePicture: {
+                    image: downloadURL
+                }
+            });
+            toast.success('Image Updated Successfully');
+        } catch (err) {
+            console.log(`Error ${err}`)
+        }
+    }
+    const previousUploader = (e) => {
+        console.log("Image process", e.target.files[0])
+        const file = e.target.files[0];
+        const fileExtension = file.name.split('.').pop();
+        // console.log('File name ' + file + 'fileExtension ' + fileExtension)
+        const storageRef = ref(init.storage, `${uuidv4()}.${fileExtension}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                //setProgresspercent(progress);
+                setPreviousImgProgress(progress)
+            },
+            (err) => {
+                console.log(err);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log('Uploaded image', downloadURL)
+                    setPreviousImgUrl(downloadURL);
+                    uploadPreviousWork(downloadURL);
+                });
+            }
+        );
+    }
+    const uploadPreviousWork = async (downloadURL) => {
+        await setDoc(doc(init.db, "merchants", merchant_id), {
+            ...merchant,
+            PreviousWork: [...merchant.PreviousWork, downloadURL]
+        });
+    }
 
+    const thingsToKnowFinder = () => {
+        switch (merchant.sub_cat_id) {
+            case '52vn6kWKmCCUGk6DqKfM': return <VenueTTK />
+            case '8x7UFtmckFjIuWUA4oaj': return <VenueTTK />
+            case 'Gsj5h6LfHMqWKbbWDdeh': return <VenueTTK />
+            case 'WgPT5AjEU6y3lnpxxkIq': return <VenueTTK />
+            default: return <Skeleton />
+        }
+    }
     return (
         <div className="page-wrapper">
             <div className="container-fluid">
@@ -191,17 +303,33 @@ const Profile = () => {
 
                                                         <div className='row'>
                                                             <div className='col-md-3 text-center'>
-                                                                {merchant?.profilePicture?.image ? (
-                                                                    <img src={merchant.profilePicture?.image} style={{ height: '200px', width: '200px', borderRadius: '50%', border: '2px solid skyblue' }} />
-                                                                ) : (
-                                                                    <Link to="/dashboard/profile-picture" style={{ textDecoration: 'none' }}>
-                                                                        <div style={{ height: '200px', width: '200px', borderRadius: '50%', border: '2px solid skyblue', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
-                                                                            <i className='fa fa-plus' style={{ fontSize: '32px' }}></i>
-                                                                            Add Profile Picture
-                                                                        </div>
-                                                                    </Link>
-                                                                )
-                                                                }
+                                                                <div style={{ position: 'relative' }}>
+                                                                    {loading ? <Skeleton style={{ height: '200px', width: '200px', borderRadius: '50%', }} /> : (
+                                                                        <img src={merchant.profilePicture?.image || avatar} style={{ height: '200px', width: '200px', borderRadius: '50%', border: '2px solid skyblue', overflow: 'hidden' }} />
+                                                                    )
+                                                                    }
+
+                                                                    {edit && (
+                                                                        <form>
+                                                                            <input type="file" id="custom_input" hidden onChange={imgUploader} />
+                                                                            <label for="custom_input" className='custum__upload__btn'>
+                                                                                Change Profile Picture &nbsp;
+                                                                                <i className='fa fa-camera' />
+
+                                                                            </label>
+                                                                        </form>
+                                                                    )}
+
+
+                                                                    {
+                                                                        !imgUrl && progresspercent ?
+                                                                            <div className="progress bg-white">
+                                                                                <div className="progress-bar progress-bar-striped bg-success" role="progressbar" style={{ width: `${progresspercent}%` }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{progresspercent} %</div>
+                                                                            </div>
+                                                                            : ''
+                                                                    }
+                                                                </div>
+
 
 
                                                             </div>
@@ -213,35 +341,43 @@ const Profile = () => {
                                                                         <p style={{ marginBottom: '-5px', fontWeight: 'bold', fontSize: '22px' }}>Business Category</p>
                                                                     </div>
                                                                     <div className='row mt-2'>
-                                                                        <div className='col-md-4'>
+                                                                        <div className='col-md-6'>
                                                                             <div className='form-group'>
 
-                                                                                <select className='form-control'>
+                                                                                <select className='form-control' disabled>
                                                                                     <option>Select Category</option>
-                                                                                    <option>Venue</option>
-                                                                                    <option>Vendor</option>
-                                                                                    <option>Transport</option>
+                                                                                    {
+                                                                                        category.map((item, index) => {
+                                                                                            return (
+                                                                                                <option value={item.id} selected={(item.id === merchant.serviceId)} key={index} >{item.cat_name}</option>
+                                                                                            )
+                                                                                        })
+                                                                                    }
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <div className='col-md-4'>
+                                                                        <div className='col-md-6'>
                                                                             <div className='form-group'>
-                                                                                <select className='form-control'>
+                                                                                <select className='form-control' disabled>
                                                                                     <option>Select Sub Category</option>
-                                                                                    <option>Venue</option>
-                                                                                    <option>Vendor</option>
-                                                                                    <option>Transport</option>
+                                                                                    {
+                                                                                        subCategory.map((item, index) => {
+                                                                                            return (
+                                                                                                <option value={item.id} selected={(item.cat_id === merchant.serviceId)} key={index}>{item.sub_cat_name}</option>
+                                                                                            )
+                                                                                        })
+                                                                                    }
                                                                                 </select>
                                                                             </div>
                                                                         </div>
-                                                                        <div className='col-md-4'>
+                                                                        {/* <div className='col-md-4'>
                                                                             <button className='btn btn-primary'>Submit</button>
-                                                                        </div>
+                                                                        </div> */}
                                                                     </div>
                                                                 </div>
                                                                 <p style={{ marginBottom: '-5px', fontWeight: 'bold', fontSize: '22px' }}>About Us</p>
                                                                 {loading ? <Skeleton count={5} /> : (
-                                                                    <p style={{ textAlign: 'justify', border: '2px solid #41B0FA', padding: '8px', borderRadius: '10px', color: 'rgba(0,0,0,0.5)' }}>{merchant?.basicDetails?.business}</p>
+                                                                    <p style={{ textAlign: 'justify', border: '2px solid #41B0FA', padding: '8px', borderRadius: '10px', color: 'rgba(0,0,0,0.5)' }}>{data.introduction}</p>
                                                                 )
                                                                 }
 
@@ -257,7 +393,7 @@ const Profile = () => {
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Country<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="country_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="country_id" onChange={formHandler} disabled={!edit ? true : false}>
                                                                                 <option>Select Country</option>
                                                                                 {
                                                                                     country?.map((item, index) => {
@@ -270,7 +406,7 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>State<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="state_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="state_id" onChange={formHandler} disabled={!edit ? true : false}>
                                                                                 <option>Select State</option>
                                                                                 {
                                                                                     state.filter((pre) => pre.country_id === data.country_id).map((item, index) => {
@@ -285,7 +421,7 @@ const Profile = () => {
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>City<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="city_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="city_id" onChange={formHandler} disabled={!edit ? true : false}>
                                                                                 <option>Select City</option>
                                                                                 {
                                                                                     city.filter((pre) => pre.state_id === data.state_id).map((item, index) => {
@@ -298,13 +434,13 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Pincode<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Locality<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="locality_id" onChange={formHandler}>
+                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="locality_id" onChange={formHandler} disabled={!edit ? true : false} >
                                                                                 <option>Select Locality</option>
                                                                                 {
                                                                                     locality.filter((pre) => pre.city_id === data.city_id).map((item, index) => {
@@ -318,53 +454,53 @@ const Profile = () => {
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Street</label>
-                                                                            <input type="text" name="street" placeholder="Street Address" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.street} onChange={formHandler} />
+                                                                            <input type="text" name="street" placeholder="Street Address" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.street} onChange={formHandler} disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Landmark</label>
                                                                             <input type="text" name="landmark" placeholder="Enter Landmark" value={data.landmark
-                                                                            } onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            } onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Email Address<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="email" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.email} onChange={formHandler} placeholder='Email Address' />
+                                                                            <input type="text" name="email" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.email} onChange={formHandler} placeholder='Email Address' disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Mobile Number<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>GST Number</label>
-                                                                            <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Working since<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Contact Person Name</label>
-                                                                            <input type="text" name="contactPersonName" value={data.contactPersonName} onChange={formHandler} placeholder="Contact Person Name" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="contactPersonName" value={data.contactPersonName} onChange={formHandler} placeholder="Contact Person Name" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='row'>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Facebook Link</label>
-                                                                            <input type="text" name="fb" value={data.fb} onChange={formHandler} placeholder="Facebook Link" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="fb" value={data.fb} onChange={formHandler} placeholder="Facebook Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                         <div className='form-group col-md-6 mb-3'>
                                                                             <label style={{ color: '#41B0FA' }}>Instagram Link</label>
-                                                                            <input type="text" name="insta" value={data.insta} onChange={formHandler} placeholder="Instagram Link" className={`form-control ${!edit ? 'blur_input' : ''}`} />
+                                                                            <input type="text" name="insta" value={data.insta} onChange={formHandler} placeholder="Instagram Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
                                                                         </div>
                                                                     </div>
                                                                     <div className='form-group'>
                                                                         <label style={{ color: '#41B0FA' }}>Business Introduction</label>
-                                                                        <textarea className={`form-control ${!edit ? 'blur_input' : ''}`} name="introduction" onChange={formHandler} placeholder='Introduction'>{data.introduction}</textarea>
+                                                                        <textarea className={`form-control ${!edit ? 'blur_input' : ''}`} name="introduction" onChange={formHandler} placeholder='Introduction' value={data.introduction} disabled={!edit ? true : false} />
                                                                     </div>
                                                                     <div className='form-group text-center'>
                                                                         <button className='btn btn-primary' onClick={btnHandler} disabled={!edit}>Submit</button>
@@ -376,7 +512,7 @@ const Profile = () => {
 
 
                                                                 {
-                                                                    merchant?.PreviousWork?.slice(0, 4).map((item, i) => {
+                                                                    merchant?.PreviousWork?.slice(0, 4).reverse(merchant.PreviousWork).map((item, i) => {
                                                                         return (
                                                                             <div className='col-md-2 col-4'>
                                                                                 <img src={item} style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px' }} className='img__style' key={i} />
@@ -384,14 +520,35 @@ const Profile = () => {
                                                                         )
                                                                     })
                                                                 }
+                                                                {loading && (
+                                                                    <>
+                                                                        <div className='col-md-2 col-4'>
+                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                                                        </div>
+                                                                        <div className='col-md-2 col-4'>
+                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                                                        </div>
+                                                                        <div className='col-md-2 col-4'>
+                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                                                        </div>
+                                                                        <div className='col-md-2 col-4'>
+                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                                                        </div>
+
+                                                                    </>
+
+                                                                )
+                                                                }
 
                                                                 <div className='col-md-2 col-4'>
-                                                                    <Link to="/dashboard/previous-work" style={{ textDecoration: 'none' }}>
+
+                                                                    <input type="file" id="previous_input" hidden onChange={previousUploader} />
+                                                                    <label for="previous_input" className=''>
                                                                         <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
                                                                             <i className='fa fa-plus' style={{ fontSize: '22px' }}></i>
                                                                             Add More
                                                                         </div>
-                                                                    </Link>
+                                                                    </label>
                                                                 </div>
                                                                 <div className='col-md-2 col-4'>
                                                                     <Link to="/dashboard/previous-work" style={{ textDecoration: 'none' }}>
@@ -401,10 +558,21 @@ const Profile = () => {
                                                                         </div>
                                                                     </Link>
                                                                 </div>
+
+                                                            </div>
+                                                            <div className='row'>
+                                                                {
+                                                                    !previousImgUrl && previousImgProgress ?
+                                                                        <div className="progress bg-white">
+                                                                            <div className="progress-bar progress-bar-striped bg-success" role="progressbar" style={{ width: `${progresspercent}%` }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{progresspercent} %</div>
+                                                                        </div>
+                                                                        : ''
+                                                                }
                                                             </div>
                                                         </div>
 
                                                     </div>
+
                                                 </div >
                                             </div >
                                         </>
@@ -413,6 +581,9 @@ const Profile = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className='row'>
+                    {thingsToKnowFinder()}
                 </div>
 
             </div>

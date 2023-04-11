@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import JoditEditor from 'jodit-react';
 import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import init from './../firebase'
 import { MdCloudUpload, MdDelete, MdAddAPhoto } from 'react-icons/md';
 import { useUserAuth } from '../context/UserAuthContext';
@@ -18,6 +18,8 @@ const AddProduct = () => {
     const merchant_id = user.uid;
     const [merchant, setMerchant] = useState({});
 
+    console.log('Merchant Info', merchant)
+
     const editor = useRef(null);
     const [content, setContent] = useState();
     const [img, setImg] = useState();
@@ -26,6 +28,7 @@ const AddProduct = () => {
     const [imgUrl, setImgUrl] = useState(null);
     const [productImages, setProductImages] = useState([])
     const [progresspercent, setProgresspercent] = useState(0);
+    const [subCategories, setSubCategories] = useState([]);
     const [data, setData] = useState({
         name: '',
         price: '',
@@ -74,9 +77,19 @@ const AddProduct = () => {
             console.log(`Error : ${error}`)
         }
     }
+    const getSubCategories = async () => {
+        try {
+            const mycollection = collection(init.db, 'sub_categories');
+            const data = await getDocs(mycollection);
+            setSubCategories(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        } catch (error) {
+            console.log(`Error ${error} `)
+        }
+    }
     useEffect(() => {
         getSingleDocumentHandler()
-    }, [])
+        getSubCategories()
+    }, [merchant_id])
     const btnHandler = async () => {
         const { name, price, discountPrice, timeDuration, quantity, unit } = data;
         if (name != '' && price != '' && discountPrice != '' && quantity != '' && unit != '') {
@@ -122,7 +135,15 @@ const AddProduct = () => {
                     <div className="col-md-12">
                         <div className="card">
                             <div className='card-header bg-white'>
-                                <h3>Product Information</h3>
+                                <select className='form-control'>
+                                    {
+                                        subCategories?.filter((subCat) => subCat?.cat_id === merchant?.serviceId).map((item) => {
+                                            return (
+                                                <option value={item.id}>{item.sub_cat_name}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
                             </div>
                             <div className='card-body'>
                                 <div className='row product_mgmt'>
@@ -181,7 +202,7 @@ const AddProduct = () => {
                                                         )
                                                     })}
                                                 </select>
-                                                <label for="floatingSelect">Unit</label>
+                                                <label htmlFor="floatingSelect">Unit</label>
                                             </div>
                                         </div>
                                     </div>

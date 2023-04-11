@@ -15,6 +15,7 @@ import Calendar from './components/Calendar';
 import Logout from './components/Logout';
 import Category from './components/Category';
 import CreateProfile from './components/CreateProfile';
+import BusinessAnalysis from './components/BusinessAnalysis';
 function App() {
   return (
     <UserAuthContextProvider>
@@ -22,7 +23,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path='category' element={<Category />} />
         <Route path='create-profile/:cat_id/:sub_cat_id' element={<CreateProfile />} />
+
         <Route path='dashboard' element={<ProtectedRoute><Index /></ProtectedRoute>}>
+          <Route path='dash_board' element={<BusinessAnalysis />} />
           <Route path='profile' element={<Profile />} />
           <Route path='profile-picture' element={<ProfilePicture />} />
           <Route path='describe-business' element={<DescribeBusiness />} />

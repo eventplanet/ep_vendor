@@ -1,0 +1,67 @@
+.total_card {
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.share_link {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body p {
+    font-size: 22px;
+    font-weight: 550;
+    color: #70757c;
+}
+
+.card_footer {
+    background-color: #e7e7e7;
+
+}
+
+.card_link {
+    width: 400px;
+    border-radius: 10px;
+}
+
+.share_link {
+    font-size: 24px;
+}
+
+.share_link span {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 18px;
+    font-weight: 550;
+    color: #70757c;
+    margin-left: 20px;
+}
+
+.share_link .watsapp {
+    color: #46c85a;
+    font-size: 44px;
+    margin-left: 20px;
+}
+
+.share_link .facebook {
+    color: #1d75f4;
+    font-size: 44px;
+    margin-left: 10px;
+}
+
+.share_link .twitter {
+    color: #1ca3f2;
+    font-size: 44px;
+    margin-left: 10px;
+}
+
+.share_link h4 {
+    padding: 20px;
+}
+
+.share_link .rightarrow {
+    font-size: 30px;
+}
