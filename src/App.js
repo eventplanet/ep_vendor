@@ -16,6 +16,8 @@ import Logout from './components/Logout';
 import Category from './components/Category';
 import CreateProfile from './components/CreateProfile';
 import BusinessAnalysis from './components/BusinessAnalysis';
+import AddStaf from './components/AddStaf';
+import AddNewBooking from './components/AddNewBooking';
 function App() {
   return (
     <UserAuthContextProvider>
@@ -33,6 +35,8 @@ function App() {
           <Route path='previous-work' element={<PreviousWork />} />
           <Route path='product-list' element={<ProductList />} />
           <Route path='add-product' element={<AddProduct />} />
+          <Route path='manage-staaf' element={<AddStaf />} />
+          <Route path='add_new_booking' element={<AddNewBooking />} />
           <Route path='logout' element={<Logout />} />
 
         </Route>

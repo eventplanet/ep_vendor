@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import avatar from '../assets/avatar.png'
 import VenueTTK from './thingstoknow/VenueTTK';
+import PhotographyTTK from './thingstoknow/PhotographyTTK';
 const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [progresspercent, setProgresspercent] = useState(0);
@@ -281,6 +282,7 @@ const Profile = () => {
             case '8x7UFtmckFjIuWUA4oaj': return <VenueTTK />
             case 'Gsj5h6LfHMqWKbbWDdeh': return <VenueTTK />
             case 'WgPT5AjEU6y3lnpxxkIq': return <VenueTTK />
+            case '8EaQ32WZPPKQHhCb0rHa': return <PhotographyTTK />
             default: return <Skeleton />
         }
     }

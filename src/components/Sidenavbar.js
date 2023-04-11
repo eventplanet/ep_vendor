@@ -1,6 +1,6 @@
 import React, { useState, } from 'react'
 import {
-  MdDashboard, MdMenu, MdPeople, MdSubscriptions, MdOutlineProductionQuantityLimits, MdAccountBox, MdOutlineBusinessCenter,
+  MdDashboard, MdPeople, MdSubscriptions, MdOutlineProductionQuantityLimits, MdAccountBox, MdOutlineBusinessCenter,
   MdOutlineLibraryAdd, MdOutlineViewList
 
 } from 'react-icons/md'
@@ -33,18 +33,13 @@ const Sidenavbar = () => {
     },
     {
       title: "Staf Management",
-      icon: < MdAccountBox className='my__nav__icon' />,
+      icon: <MdAccountBox className='my__nav__icon' />,
       dropDown: [
         {
-          title: "Previous Work",
+          title: "Manage Staaf",
           icon: <MdDashboard className='my__nav__icon' />,
-          href: 'previous-work'
-        },
-        {
-          title: "Basic Details",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'basic-details'
-        },
+          href: 'manage-staaf'
+        }
       ]
     },
     {
@@ -52,15 +47,10 @@ const Sidenavbar = () => {
       icon: <MdOutlineBusinessCenter className='my__nav__icon' />,
       dropDown: [
         {
-          title: "Previous Work",
+          title: "Add New Booking",
           icon: <MdDashboard className='my__nav__icon' />,
-          href: 'previous-work'
-        },
-        {
-          title: "Basic Details",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'basic-details'
-        },
+          href: 'add_new_booking'
+        }
       ]
     }
   ])

@@ -12,7 +12,7 @@
 }
 
 .card-body p {
-    font-size: 22px;
+    font-size: 15px;
     font-weight: 550;
     color: #70757c;
 }
@@ -23,7 +23,7 @@
 }
 
 .card_link {
-    width: 400px;
+    width: 100%;
     border-radius: 10px;
 }
 
@@ -42,24 +42,24 @@
 
 .share_link .watsapp {
     color: #46c85a;
-    font-size: 44px;
+    font-size: 36px;
     margin-left: 20px;
 }
 
 .share_link .facebook {
     color: #1d75f4;
-    font-size: 44px;
+    font-size: 36px;
     margin-left: 10px;
 }
 
 .share_link .twitter {
     color: #1ca3f2;
-    font-size: 44px;
+    font-size: 36px;
     margin-left: 10px;
 }
 
 .share_link h4 {
-    padding: 20px;
+    padding: 12px;
 }
 
 .share_link .rightarrow {
