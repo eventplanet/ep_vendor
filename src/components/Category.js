@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 import Modal from 'react-bootstrap/Modal';
 import Header from '../Header';
 import Footer from '../Footer';
+import '../Home.css'
 import 'react-toastify/dist/ReactToastify.css';
 import init from './../firebase'
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import { collection, getDocs } from 'firebase/firestore';
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
 

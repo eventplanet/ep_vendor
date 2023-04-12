@@ -97,8 +97,8 @@ const PreviousWork = () => {
                                                 return (
                                                     <div className="col-md-3 col-sm-6 col-6" key={index}>
                                                         <div className="img_box">
-                                                            <img src={res} alt="" style={{ border: '1px solid red', }} />
-                                                            <div className='close_btn' onClick={() => deleteBtnHandler(index)}>
+                                                            <img src={res} alt="" style={{ border: '1px solid skyblue', }} />
+                                                            <div className='close_btn bg-primary' onClick={() => deleteBtnHandler(index)}>
                                                                 x
                                                             </div>
                                                         </div>

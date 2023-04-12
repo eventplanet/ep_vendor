@@ -13,6 +13,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import avatar from '../assets/avatar.png'
 import VenueTTK from './thingstoknow/VenueTTK';
 import PhotographyTTK from './thingstoknow/PhotographyTTK';
+import './thingstoknow/style.css'
 const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [progresspercent, setProgresspercent] = useState(0);
@@ -388,189 +389,223 @@ const Profile = () => {
                                                         <div className='row'>
                                                             <div className='col-md-12'>
                                                                 <div className='d-flex justify-content-between'>
-                                                                    <h3>Complete Your Business Profile</h3> <button className='btn btn-primary btn-sm' onClick={() => setEdit(!edit)}><i className='fa fa-edit' ></i> Edit</button>
+                                                                    <h3>Complete Your Business Profile</h3>
                                                                 </div>
-
-                                                                <form className='py-3'>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Country<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="country_id" onChange={formHandler} disabled={!edit ? true : false}>
-                                                                                <option>Select Country</option>
-                                                                                {
-                                                                                    country?.map((item, index) => {
-                                                                                        return (
-                                                                                            <option value={item.id} key={index} selected={(item.id === data.country_id)}>{item.name}</option>
-                                                                                        )
-                                                                                    })
-                                                                                }
-                                                                            </select>
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>State<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="state_id" onChange={formHandler} disabled={!edit ? true : false}>
-                                                                                <option>Select State</option>
-                                                                                {
-                                                                                    state.filter((pre) => pre.country_id === data.country_id).map((item, index) => {
-                                                                                        return (
-                                                                                            <option value={item.id} key={index} selected={(item.id === data.state_id)}>{item.name}</option>
-                                                                                        )
-                                                                                    })
-                                                                                }
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>City<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="city_id" onChange={formHandler} disabled={!edit ? true : false}>
-                                                                                <option>Select City</option>
-                                                                                {
-                                                                                    city.filter((pre) => pre.state_id === data.state_id).map((item, index) => {
-                                                                                        return (
-                                                                                            <option value={item.id} selected={(item.id === data.city_id)}>{item.city}</option>
-                                                                                        )
-                                                                                    })
-                                                                                }
-                                                                            </select>
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Pincode<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Locality<span className='text-danger'>*</span></label>
-                                                                            <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="locality_id" onChange={formHandler} disabled={!edit ? true : false} >
-                                                                                <option>Select Locality</option>
-                                                                                {
-                                                                                    locality.filter((pre) => pre.city_id === data.city_id).map((item, index) => {
-                                                                                        return (
-                                                                                            <option value={item.id} key={index} selected={(item.id === data.locality_id)}>{item.name}</option>
-                                                                                        )
-                                                                                    })
-                                                                                }
-
-                                                                            </select>
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Street</label>
-                                                                            <input type="text" name="street" placeholder="Street Address" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.street} onChange={formHandler} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Landmark</label>
-                                                                            <input type="text" name="landmark" placeholder="Enter Landmark" value={data.landmark
-                                                                            } onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Email Address<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="email" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.email} onChange={formHandler} placeholder='Email Address' disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Mobile Number<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>GST Number</label>
-                                                                            <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Working since<span className='text-danger'>*</span></label>
-                                                                            <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Contact Person Name</label>
-                                                                            <input type="text" name="contactPersonName" value={data.contactPersonName} onChange={formHandler} placeholder="Contact Person Name" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='row'>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Facebook Link</label>
-                                                                            <input type="text" name="fb" value={data.fb} onChange={formHandler} placeholder="Facebook Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                        <div className='form-group col-md-6 mb-3'>
-                                                                            <label style={{ color: '#41B0FA' }}>Instagram Link</label>
-                                                                            <input type="text" name="insta" value={data.insta} onChange={formHandler} placeholder="Instagram Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='form-group'>
-                                                                        <label style={{ color: '#41B0FA' }}>Business Introduction</label>
-                                                                        <textarea className={`form-control ${!edit ? 'blur_input' : ''}`} name="introduction" onChange={formHandler} placeholder='Introduction' value={data.introduction} disabled={!edit ? true : false} />
-                                                                    </div>
-                                                                    <div className='form-group text-center'>
-                                                                        <button className='btn btn-primary' onClick={btnHandler} disabled={!edit}>Submit</button>
-                                                                    </div>
-
-                                                                </form>
-                                                            </div>
-                                                            <div className='row p-2' style={{ border: '2px solid #41B0FA', borderRadius: '10px' }}>
-
-
                                                                 {
-                                                                    merchant?.PreviousWork?.slice(0, 4).reverse(merchant.PreviousWork).map((item, i) => {
-                                                                        return (
-                                                                            <div className='col-md-2 col-4'>
-                                                                                <img src={item} style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px' }} className='img__style' key={i} />
+                                                                    merchant.vendorProfile && (
+                                                                        <>
+                                                                            <div className='table-responsive'>
+                                                                                <table className='table text-center ttk_preview' cellPadding={0} cellSpacing={0} style={{ border: '1px solid #fff ' }}>
+                                                                                    <tr style={{ color: '#41B0FA' }}>
+                                                                                        <th>Country</th>
+                                                                                        <th>State</th>
+                                                                                        <th>City</th>
+                                                                                        <th>Pincode</th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            {
+                                                                                                country?.filter((pre) => pre.id === data.country_id).map((item, index) => {
+                                                                                                    return (
+                                                                                                        <>{item.name}</>
+                                                                                                    )
+                                                                                                })
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            {
+                                                                                                state?.filter((pre) => pre.id === data.state_id).map((item, index) => {
+                                                                                                    return (
+                                                                                                        <>{item.name}</>
+                                                                                                    )
+                                                                                                })
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            {
+                                                                                                city?.filter((pre) => pre.id === data.city_id).map((item, index) => {
+                                                                                                    return (
+                                                                                                        <>{item.city}</>
+                                                                                                    )
+                                                                                                })
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>{merchant.vendorProfile.pincode}</td>
+                                                                                    </tr>
+                                                                                    <tr style={{ color: '#41B0FA' }}>
+                                                                                        <th>Locality</th>
+                                                                                        <th>Street</th>
+                                                                                        <th>Landmark</th>
+                                                                                        <th>Email Address</th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            {
+                                                                                                locality?.filter((pre) => pre.id === data.locality_id).map((item, index) => {
+                                                                                                    return (
+                                                                                                        <>{item.name}</>
+                                                                                                    )
+                                                                                                })
+                                                                                            }
+                                                                                        </td>
+                                                                                        <td>{merchant.vendorProfile.street}</td>
+                                                                                        <td>Lko</td>
+                                                                                        <td>{merchant.vendorProfile.landmark}</td>
+                                                                                    </tr>
+                                                                                    <tr style={{ color: '#41B0FA' }}>
+                                                                                        <th>Mobile Number</th>
+                                                                                        <th>GST Number</th>
+                                                                                        <th>Working since</th>
+                                                                                        <th>Contact Person Name</th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>{merchant.vendorProfile.mobno}</td>
+                                                                                        <td>{merchant.vendorProfile.gst}</td>
+                                                                                        <td>{merchant.vendorProfile.workingSince}</td>
+                                                                                        <td>{merchant.vendorProfile.contactPersonName}</td>
+                                                                                    </tr>
+                                                                                    <tr style={{ color: '#41B0FA' }}>
+                                                                                        <th>Facebook Link</th>
+                                                                                        <th>Instagram Link</th>
+                                                                                        <th colSpan={2}>Business Introduction</th>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>{merchant.vendorProfile.fb}</td>
+                                                                                        <td>{merchant.vendorProfile.insta}</td>
+                                                                                        <td>{merchant.vendorProfile.introduction}</td>
+                                                                                    </tr>
+                                                                                </table>
                                                                             </div>
-                                                                        )
-                                                                    })
+                                                                        </>
+                                                                    )
                                                                 }
-                                                                {loading && (
-                                                                    <>
-                                                                        <div className='col-md-2 col-4'>
-                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
-                                                                        </div>
-                                                                        <div className='col-md-2 col-4'>
-                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
-                                                                        </div>
-                                                                        <div className='col-md-2 col-4'>
-                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
-                                                                        </div>
-                                                                        <div className='col-md-2 col-4'>
-                                                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
-                                                                        </div>
-
-                                                                    </>
-
-                                                                )
-                                                                }
-
-                                                                <div className='col-md-2 col-4'>
-
-                                                                    <input type="file" id="previous_input" hidden onChange={previousUploader} />
-                                                                    <label for="previous_input" className=''>
-                                                                        <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
-                                                                            <i className='fa fa-plus' style={{ fontSize: '22px' }}></i>
-                                                                            Add More
-                                                                        </div>
-                                                                    </label>
-                                                                </div>
-                                                                <div className='col-md-2 col-4'>
-                                                                    <Link to="/dashboard/previous-work" style={{ textDecoration: 'none' }}>
-                                                                        <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
-                                                                            <i className='fa fa-search' style={{ fontSize: '22px' }}></i>
-                                                                            View All
-                                                                        </div>
-                                                                    </Link>
-                                                                </div>
-
-                                                            </div>
-                                                            <div className='row'>
+                                                                <center><button className='btn btn-primary btn-sm' onClick={() => setEdit(!edit)}><i className='fa fa-edit' ></i>{`${merchant.vendorProfile ? 'Update Basic Details' : 'Complete Your Profile'}`}</button></center>
                                                                 {
-                                                                    !previousImgUrl && previousImgProgress ?
-                                                                        <div className="progress bg-white">
-                                                                            <div className="progress-bar progress-bar-striped bg-success" role="progressbar" style={{ width: `${progresspercent}%` }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{progresspercent} %</div>
-                                                                        </div>
-                                                                        : ''
+                                                                    edit && (
+                                                                        <form className='py-3'>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Country<span className='text-danger'>*</span></label>
+                                                                                    <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="country_id" onChange={formHandler} disabled={!edit ? true : false}>
+                                                                                        <option>Select Country</option>
+                                                                                        {
+                                                                                            country?.map((item, index) => {
+                                                                                                return (
+                                                                                                    <option value={item.id} key={index} selected={(item.id === data.country_id)}>{item.name}</option>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>State<span className='text-danger'>*</span></label>
+                                                                                    <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="state_id" onChange={formHandler} disabled={!edit ? true : false}>
+                                                                                        <option>Select State</option>
+                                                                                        {
+                                                                                            state.filter((pre) => pre.country_id === data.country_id).map((item, index) => {
+                                                                                                return (
+                                                                                                    <option value={item.id} key={index} selected={(item.id === data.state_id)}>{item.name}</option>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>City<span className='text-danger'>*</span></label>
+                                                                                    <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="city_id" onChange={formHandler} disabled={!edit ? true : false}>
+                                                                                        <option>Select City</option>
+                                                                                        {
+                                                                                            city.filter((pre) => pre.state_id === data.state_id).map((item, index) => {
+                                                                                                return (
+                                                                                                    <option value={item.id} selected={(item.id === data.city_id)}>{item.city}</option>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Pincode<span className='text-danger'>*</span></label>
+                                                                                    <input type="text" name="pincode" placeholder="Enter Pincode" value={data.pincode} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Locality<span className='text-danger'>*</span></label>
+                                                                                    <select className={`form-control ${!edit ? 'blur_input' : ''}`} name="locality_id" onChange={formHandler} disabled={!edit ? true : false} >
+                                                                                        <option>Select Locality</option>
+                                                                                        {
+                                                                                            locality.filter((pre) => pre.city_id === data.city_id).map((item, index) => {
+                                                                                                return (
+                                                                                                    <option value={item.id} key={index} selected={(item.id === data.locality_id)}>{item.name}</option>
+                                                                                                )
+                                                                                            })
+                                                                                        }
+
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Street</label>
+                                                                                    <input type="text" name="street" placeholder="Street Address" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.street} onChange={formHandler} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Landmark</label>
+                                                                                    <input type="text" name="landmark" placeholder="Enter Landmark" value={data.landmark
+                                                                                    } onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Email Address<span className='text-danger'>*</span></label>
+                                                                                    <input type="text" name="email" className={`form-control ${!edit ? 'blur_input' : ''}`} value={data.email} onChange={formHandler} placeholder='Email Address' disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Mobile Number<span className='text-danger'>*</span></label>
+                                                                                    <input type="text" name="mobno" placeholder="Mobile Number" value={data.mobno} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>GST Number</label>
+                                                                                    <input type="text" name="gst" placeholder="GST Number" value={data.gst} onChange={formHandler} className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Working since<span className='text-danger'>*</span></label>
+                                                                                    <input type="text" name="workingSince" value={data.workingSince} onChange={formHandler} placeholder="Working since" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Contact Person Name</label>
+                                                                                    <input type="text" name="contactPersonName" value={data.contactPersonName} onChange={formHandler} placeholder="Contact Person Name" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='row'>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Facebook Link</label>
+                                                                                    <input type="text" name="fb" value={data.fb} onChange={formHandler} placeholder="Facebook Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                                <div className='form-group col-md-6 mb-3'>
+                                                                                    <label style={{ color: '#41B0FA' }}>Instagram Link</label>
+                                                                                    <input type="text" name="insta" value={data.insta} onChange={formHandler} placeholder="Instagram Link" className={`form-control ${!edit ? 'blur_input' : ''}`} disabled={!edit ? true : false} />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className='form-group'>
+                                                                                <label style={{ color: '#41B0FA' }}>Business Introduction</label>
+                                                                                <textarea className={`form-control ${!edit ? 'blur_input' : ''}`} name="introduction" onChange={formHandler} placeholder='Introduction' value={data.introduction} disabled={!edit ? true : false} />
+                                                                            </div>
+                                                                            <div className='form-group text-center'>
+                                                                                <button className='btn btn-primary' onClick={btnHandler} disabled={!edit}>Submit</button>
+                                                                            </div>
+
+                                                                        </form>
+                                                                    )
                                                                 }
+
+
                                                             </div>
+
                                                         </div>
 
                                                     </div>
@@ -584,13 +619,90 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
+                <div className='row' >
+
+                    <div className='card'>
+                        <div className='card-header bg-primary text-white'>
+                            Previous Work Image
+                        </div>
+                        <div className='card-body'>
+                            <div className='row'>
+                                {loading && (
+                                    <>
+                                        <div className='col-md-2 col-4'>
+                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                        </div>
+                                        <div className='col-md-2 col-4'>
+                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                        </div>
+                                        <div className='col-md-2 col-4'>
+                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                        </div>
+                                        <div className='col-md-2 col-4'>
+                                            <Skeleton count={1} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '1px' }} />
+                                        </div>
+
+                                    </>
+
+                                )
+                                }
+                                {
+                                    merchant?.PreviousWork?.slice(0, 4).reverse(merchant.PreviousWork).map((item, i) => {
+                                        return (
+                                            <div className='col-md-2 col-6'>
+                                                <img src={item} style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px' }} className='img__style' key={i} />
+                                            </div>
+                                        )
+                                    })
+                                }
+                                <div className='col-md-2 col-6'>
+
+                                    <input type="file" id="previous_input" hidden onChange={previousUploader} />
+                                    <label for="previous_input" className=''>
+                                        <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
+                                            <i className='fa fa-plus' style={{ fontSize: '22px' }}></i>
+                                            Add More
+                                        </div>
+                                    </label>
+                                </div>
+                                <div className='col-md-2 col-6'>
+                                    <Link to="/dashboard/previous-work" style={{ textDecoration: 'none' }}>
+                                        <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
+                                            <i className='fa fa-search' style={{ fontSize: '22px' }}></i>
+                                            View All
+                                        </div>
+                                    </Link>
+                                </div>
+
+
+
+                            </div>
+
+                            <div className='row'>
+                                {
+                                    !previousImgUrl && previousImgProgress ?
+                                        <div className="progress bg-white">
+                                            <div className="progress-bar progress-bar-striped bg-success" role="progressbar" style={{ width: `${previousImgProgress}%` }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{progresspercent} %</div>
+                                        </div>
+                                        : ''
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+
                 <div className='row'>
                     {thingsToKnowFinder()}
                 </div>
 
             </div>
             <ToastContainer />
-        </div>
+        </div >
     )
 }
 

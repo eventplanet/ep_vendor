@@ -1,0 +1,15 @@
+.ttk_preview td {
+    font-size: 12px;
+    font-weight: 550;
+}
+
+
+.ttk_preview th {
+    font-weight: 800;
+    font-size: 14px;
+}
+
+.ttk_preview td,
+.ttk_preview th {
+    padding: 5px !important;
+}

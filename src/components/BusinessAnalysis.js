@@ -77,13 +77,17 @@ const BusinessAnalysis = () => {
                     <div className='col-md-4'>
                         <div class="card_link shadow card">
                             <div class="card-body">
-                                <h3 class="my-3">Share store link</h3>
+                                <h3 class="my-3">Share Profile link</h3>
                                 <p>Customers can visit the following link and place their orders.</p>
                                 <div className='share_link'>
                                     <ul>
                                         <Link to='https://eventplanet.in/' className='text-danger'>https://eventplanet.in/</Link>
                                     </ul>
-                                    <span> Share Via <FaWhatsappSquare className='watsapp' /> <FaFacebookSquare className='facebook' /><FaTwitterSquare className='twitter' /></span>
+                                    <span> Share Via
+                                        <a href="https://api.whatsapp.com/send?text=https://eventplanet.in/" target="_blank"><FaWhatsappSquare className='watsapp' /></a>
+                                        <a href="https://facebook.com/share.php?u=https://eventplanet.in/" target="_blank"><FaFacebookSquare className='facebook' /></a>
+                                        <a href="http://twitter.com/share?text=Event%20Planet&url=https://eventplanet.in/" target="_blank"><FaTwitterSquare className='twitter' /></a>
+                                    </span>
                                     <div className='card_footer'>
                                         <center> <h4>Get your custom domain <AiFillRightCircle className='rightarrow' /></h4></center>
                                     </div>
