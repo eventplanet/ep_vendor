@@ -50,42 +50,29 @@ const CreateProfile = () => {
                     serviceId: cat_id,
                     sub_cat_id: sub_cat_id,
                     business_name,
-                    vendorProfile: [],
-                    products: [],
-                    calendar: [],
-                    PreviousWork: [],
-                    contactInfo: {
-                        contactPersonName: '',
+                    vendorProfile: {
+                        country_id: '',
+                        state_id: '',
+                        city_id: '',
+                        pincode: '',
+                        locality_id: '',
+                        street: '',
+                        landmark: '',
                         email,
                         mobno,
-                        businessAddress: '',
-                        status: false
+                        gst: '',
+                        workingSince: '',
+                        contactPersonName: '',
+                        fb: '',
+                        insta: '',
+                        introduction: ''
                     },
-                    serviceAndPricing: {
-                        areaName: '',
-                        areaType: '',
-                        floatingCapacity: '',
-                        fixedCapacity: '',
-                        parkingFacility: '',
-                        rentalFrom: '',
-                        advanceForBooking: '',
-                        paymentOnEventDate: '',
-                        paymentOnDelivery: '',
-                        cancellationPolicy: '',
-                        additionalFacility: {},
-                        status: false
-                    },
-                    profilePicture: {},
-                    basicDetails: {
-                        business: "",
-                        year: "",
-                        number: "",
-                        web: "",
-                        fb: "",
-                        insta: "",
-                        propertyType: {},
-                        status: false
-                    }
+                    products: [],
+                    thingsToKnow: [],
+                    calendar: [],
+                    staff: [],
+                    PreviousWork: [],
+                    profilePicture: {}
 
                 });
                 navigate('/dashboard/profile');

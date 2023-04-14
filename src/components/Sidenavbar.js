@@ -32,27 +32,27 @@ const Sidenavbar = () => {
       ]
     },
     {
-      title: "Staf Management",
+      title: "Staff Management",
       icon: <MdAccountBox className='my__nav__icon' />,
       dropDown: [
         {
-          title: "Manage Staaf",
+          title: "Manage Staff",
           icon: <MdDashboard className='my__nav__icon' />,
-          href: 'manage-staaf'
+          href: 'manage-staff'
         }
       ]
     },
-    {
-      title: "Business Management",
-      icon: <MdOutlineBusinessCenter className='my__nav__icon' />,
-      dropDown: [
-        {
-          title: "Add New Booking",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'add_new_booking'
-        }
-      ]
-    }
+    // {
+    //   title: "Business Management",
+    //   icon: <MdOutlineBusinessCenter className='my__nav__icon' />,
+    //   dropDown: [
+    //     {
+    //       title: "Add New Booking",
+    //       icon: <MdDashboard className='my__nav__icon' />,
+    //       href: 'add_new_booking'
+    //     }
+    //   ]
+    // }
   ])
   return (
     <aside className="left-sidebar" data-sidebarbg="skin5" >
@@ -75,6 +75,13 @@ const Sidenavbar = () => {
                 )
               })
             }
+            <li className="sidebar-item">
+              <Link
+                className="sidebar-link waves-effect waves-dark sidebar-link"
+                to="/dashboard/business-management"
+                aria-expanded="false"
+              ><MdOutlineBusinessCenter size={23} style={{ display: 'inline-block', color: 'white', textAlign: 'center', width: '35px' }} /><span className="hide-menu">Business Management</span></Link>
+            </li>
 
 
 

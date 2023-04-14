@@ -2,31 +2,46 @@ import React, { useState, useEffect } from 'react'
 import { doc, setDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import init from './../firebase';
 import { useUserAuth } from '../context/UserAuthContext';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton'
+import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom'
-
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import Modal from 'react-bootstrap/Modal';
 const ProductList = () => {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const { user } = useUserAuth();
     const merchant_id = user.uid;
-    console.log('Merchant ID', merchant_id)
+
     const [merchant, setMerchant] = useState({});
     console.log(merchant.serviceId)
     const [data, setData] = useState([]);
     const [query, setQuery] = useState('');
-    console.log(data)
+
     const [loading, setLoading] = useState(true)
     const [check, setCheck] = useState(null)
-    console.log('Data', data)
+
     const [category, setCategory] = useState()
-    console.log('Category', category)
+
     const getCategory = async () => {
         try {
             const mycollection = collection(init.db, 'serviceCategories');
             const data = await getDocs(mycollection);
             setCategory(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        } catch (error) {
+            console.log(`Error ${error} `)
+        }
+    }
+    const [subCategory, setSubCategory] = useState()
+    const getSubCategory = async () => {
+        try {
+            const mycollection = collection(init.db, 'sub_categories');
+            const data = await getDocs(mycollection);
+            setSubCategory(data.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
         } catch (error) {
             console.log(`Error ${error} `)
         }
@@ -45,6 +60,7 @@ const ProductList = () => {
     useEffect(() => {
         getSingleDocumentHandler();
         getCategory();
+        getSubCategory();
     }, [merchant_id])
     const switchHandler = async (e, index) => {
         const newDataArray = [...data];
@@ -65,7 +81,17 @@ const ProductList = () => {
             console.log(`Error ${err}`)
         }
     }
-    const catObj = category?.find(cat => cat.id === merchant.serviceId)
+
+    const SubCategoryNameFinder = (sub_cat_id) => {
+        const catObj = subCategory?.find(sub_cat => sub_cat.id === sub_cat_id)
+        return catObj?.sub_cat_name
+    }
+    const [curProduct, setCurProduct] = useState([]);
+    console.log('Wah ', curProduct)
+    const setCurrentProduct = (index) => {
+        handleShow()
+        setCurProduct(data[index])
+    }
     return (
         <div className="page-wrapper">
             <div className="container-fluid">
@@ -105,13 +131,12 @@ const ProductList = () => {
                                                             <tr key={index}>
                                                                 <td>
                                                                     <div className='d-flex align-items-center'>
-                                                                        <img src={item.productImages[0]} style={{ height: '60px', width: '60px', borderRadius: '10px' }} />
+                                                                        <img src={item.productImages[0]} style={{ height: '60px', width: '60px', borderRadius: '10px', marginRight: '5px' }} />
                                                                         <p>{item.name}
                                                                             <br />
-                                                                            {` (${catObj?.cat_name})`}</p>
+                                                                            {SubCategoryNameFinder(item.sub_cat_id)}
+                                                                        </p>
                                                                     </div>
-
-
                                                                 </td>
                                                                 <td>&#8377;{item.discountPrice}<strike style={{ color: '#bfbfbf' }}>&#8377;{item.price}</strike></td>
                                                                 <td>
@@ -122,12 +147,12 @@ const ProductList = () => {
                                                                                 onChange={(e) => switchHandler(e, index)}
                                                                                 checked={item.stock} />
                                                                         </div>
-                                                                        <span className={item.stock ? 'text-success' : 'text-danger'} style={{ fontSize: '14px' }}> {item.stock ? '  in Stock' : 'Out Of Stock'}</span>
+                                                                        <span className={item.stock ? 'text-success' : 'text-danger'} style={{ fontSize: '14px' }}> {item.stock ? 'Available' : 'Not Available'}</span>
                                                                     </div>
 
                                                                 </td>
                                                                 <td>
-                                                                    <i className='far fa-eye'></i>
+                                                                    <i className='far fa-eye' onClick={() => setCurrentProduct(index)} style={{ cursor: 'pointer' }}></i>
                                                                     <i className='far fa-copy'></i>
                                                                     <i className='fas fa-share'></i>
                                                                 </td>
@@ -149,7 +174,54 @@ const ProductList = () => {
 
             </div>
             <ToastContainer />
-        </div>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Product/Service Info</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className='p-0'>
+                    {
+                        curProduct && (
+                            <>
+                                <table className='table table-bordered' width="100%">
+                                    <tr>
+                                        <tbody>
+                                            <tr>
+                                                <td>Product/Service Name</td>
+                                                <td>{curProduct.name}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Price</td>
+                                                <td>&#8377;{curProduct.price} &#8377;<strike>{curProduct.discountPrice}</strike></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quantity</td>
+                                                <td>{curProduct.quantity} / {curProduct.unit}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Description</td>
+                                                <td> <div dangerouslySetInnerHTML={{ __html: curProduct.productDescription }} /></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Product Images</td>
+                                                <td>
+                                                    {
+                                                        curProduct.productImages?.map((item, index) => {
+                                                            return (
+                                                                <img src={item} alt={curProduct.name} key={index} style={{ height: '100px', width: '100px', borderRadius: '10px', margin: '5px' }} />
+                                                            )
+                                                        })
+                                                    }
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </tr>
+                                </table>
+                            </>
+                        )
+                    }
+                </Modal.Body>
+            </Modal >
+        </div >
     )
 }
 

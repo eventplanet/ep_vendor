@@ -150,7 +150,11 @@ const VenueTTK = () => {
                                                     })
                                                 }</td>
                                                 <td>{merchant.thingsToKnow.parkingSize}</td>
-                                                <td>&#8377;{merchant.thingsToKnow.vegPrice}</td>
+                                                <td>&#8377;{merchant.thingsToKnow.vegPrice}
+                                                    <small className='text-success' style={{
+                                                        fontWeight: 'bold'
+                                                    }}> Per Plate</small>
+                                                </td>
                                             </tr>
                                             <tr style={{ color: '#41B0FA' }}>
                                                 <th>Non Veg Price</th>
@@ -159,7 +163,11 @@ const VenueTTK = () => {
                                                 <th>Room Counts </th>
                                             </tr>
                                             <tr>
-                                                <td>{merchant.thingsToKnow.nonVegPrice}</td>
+                                                <td>&#8377; {merchant.thingsToKnow.nonVegPrice}
+                                                    <small className='text-success' style={{
+                                                        fontWeight: 'bold'
+                                                    }}> Per Plate</small>
+                                                </td>
                                                 <td>{
                                                     merchant.thingsToKnow.smallPartiesVenue
                                                         ?.map((item, index) => {
@@ -270,14 +278,14 @@ const VenueTTK = () => {
                                     </div>
                                     <div className='col-md-6'>
                                         <div className='form-group'>
-                                            <label>Veg Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Veg Price' name="vegPrice" value={data.vegPrice} onChange={formHandler} className='form-control' />
+                                            <label>Veg Price Per Plate<span className='text-danger'>*</span></label>
+                                            <input type='number' placeholder='Veg Price Per Plate' name="vegPrice" value={data.vegPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
                                         <div className='form-group'>
-                                            <label>Non Veg Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Non Veg Price' name="nonVegPrice" value={data.nonVegPrice} onChange={formHandler} className='form-control' />
+                                            <label>Non Veg Price Per Plate<span className='text-danger'>*</span></label>
+                                            <input type='number' placeholder='Non Veg Price Per Plate' name="nonVegPrice" value={data.nonVegPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
@@ -314,7 +322,7 @@ const VenueTTK = () => {
                                     <div className='col-md-6'>
                                         <div className='form-group'>
                                             <label>Average Room Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Average Room Price' name="avgRoomPrice" value={data.avgRoomPrice} onChange={formHandler} className='form-control' />
+                                            <input type='number' placeholder='Average Room Price' name="avgRoomPrice" value={data.avgRoomPrice || merchant.thingsToKnow?.avgRoomPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
@@ -359,7 +367,7 @@ const VenueTTK = () => {
                                         <div className='form-group'>
                                             <label>DJ Policy <span className='text-danger'>*</span></label>
                                             <Select
-                                                closeMenuOnSelect={false}
+                                                closeMenuOnSelect={true}
                                                 isMulti
                                                 options={djPolicyOption}
                                                 selected
@@ -368,7 +376,7 @@ const VenueTTK = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='form-group'>
+                                <div className='form-group text-center'>
                                     <button className='btn btn-primary' >{ttkEditMode ? 'Save Changes' : 'Submit'}</button>
                                 </div>
                             </form>

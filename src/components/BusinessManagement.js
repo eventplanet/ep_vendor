@@ -5,7 +5,8 @@ import { AiFillRightCircle } from 'react-icons/ai'
 import { Chart } from "react-google-charts";
 import { Link } from 'react-router-dom'
 import { FaFirstOrder } from 'react-icons/fa'
-const BusinessAnalysis = () => {
+
+const BusinessManagement = () => {
     const data = [
         [
             "Month",
@@ -34,28 +35,29 @@ const BusinessAnalysis = () => {
     const [box, setBox] = useState([
 
         {
-            title: 'Receive queries',
-            quatity: '70',
-            url: 'https://img.icons8.com/office/256/booking.png'
+            title: 'Add Booking',
+            quatity: '',
+            url: 'https://img.icons8.com/office/256/booking.png',
+            href: "/dashboard/add_new_booking"
         },
         {
-            title: 'Pending queries',
-            quatity: '76',
+            title: 'Update Your Calendar',
+            quatity: '',
             url: 'https://cdn-icons-png.flaticon.com/512/8286/8286738.png'
         },
         {
-            title: 'Total Impressions ',
+            title: 'Pending Queries ',
             quatity: '56',
             url: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/impression-2634419-2187376.png'
         },
         {
-            title: 'Your Response Time',
+            title: 'Total Queries',
             quatity: '433',
             url: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/response-time-2682020-2232039.png'
         },
         {
-            title: 'Total  reviews',
-            quatity: '343',
+            title: 'Promote Business',
+            quatity: '',
             url: 'https://cdn-icons-png.flaticon.com/512/5702/5702664.png'
         },
 
@@ -68,7 +70,7 @@ const BusinessAnalysis = () => {
                 <div className="card">
                     <div class="card-body">
                         <div class="d-md-flex align-items-center">
-                            <h4 class="card-title">Dashboard</h4>
+                            <h4 class="card-title">Business Management</h4>
 
                         </div>
 
@@ -78,6 +80,7 @@ const BusinessAnalysis = () => {
                                 {
                                     box.map((cur, index) => {
                                         return (
+
                                             <div class="col-md-3 col-6">
                                                 <div class=" p-10  text-center total_card shadow-sm ">
 
@@ -86,11 +89,12 @@ const BusinessAnalysis = () => {
                                                         />
                                                         <h4 class="">{cur.quatity}</h4>
                                                     </div>
-                                                    <p class=" p-2">{cur.title}</p>
+                                                    <Link to={cur.href}><p class=" p-2">{cur.title}</p>  </Link>
 
 
                                                 </div>
                                             </div>
+
                                         )
                                     })
                                 }
@@ -99,38 +103,7 @@ const BusinessAnalysis = () => {
                     </div>
 
                 </div>
-                <div className='row'>
-                    <div className='col-md-4'>
-                        <div class="card_link shadow card">
-                            <div class="card-body">
-                                <h3 class="my-3">Share Profile link</h3>
-                                <p>Customers can visit the following link and place their orders.</p>
-                                <div className='share_link'>
-                                    <ul>
-                                        <Link to='https://eventplanet.in/' className='text-danger'>https://eventplanet.in/</Link>
-                                    </ul>
-                                    <span> Share Via
-                                        <a href="https://api.whatsapp.com/send?text=https://eventplanet.in/" target="_blank"><FaWhatsappSquare className='watsapp' /></a>
-                                        <a href="https://facebook.com/share.php?u=https://eventplanet.in/" target="_blank"><FaFacebookSquare className='facebook' /></a>
-                                        <a href="http://twitter.com/share?text=Event%20Planet&url=https://eventplanet.in/" target="_blank"><FaTwitterSquare className='twitter' /></a>
-                                    </span>
-                                    <div className='card_footer'>
-                                        <center> <h4>Get your custom domain <AiFillRightCircle className='rightarrow' /></h4></center>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='col-md-8 mb-3' >
-                        <Chart
-                            chartType="ComboChart"
-                            width="100%"
-                            height="400px"
-                            data={data}
-                            options={options}
-                        />
-                    </div>
-                </div>
+
 
             </div>
         </div>
@@ -139,4 +112,4 @@ const BusinessAnalysis = () => {
     )
 }
 
-export default BusinessAnalysis
+export default BusinessManagement
