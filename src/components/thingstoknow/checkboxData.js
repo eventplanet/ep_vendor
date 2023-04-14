@@ -85,74 +85,6 @@ export const checkboxData = {
         { value: 'Limited Parking', label: 'Limited Parking' },
         { value: 'Large Parking Space', label: 'Large Parking Space' },
     ],
-<<<<<<< HEAD
-    bridalMakeupPrice:[
-            { value: '2100 per function', label:'2100 per function'},
-
-    ],
-    airbrush:[
-        { value:'35000', label:'35000'},
-    ],
-    makeupfamily:[
-
-        {value:'2500 per persion', label:'2500 per persion'},
-    ],
-    outstationmakeup:[
-
-        {value:'20000 per function', label:'20000 per function '},
-    ],
-
-   engagementmakeup:[
-    {value:'7000', label:'7000'},
-   ],
-
-  
-   trailpolicy:[
-
-    {value:'Offers paid trial-money',label:'Offers paid trial-money'},
-    {value:'Adujest if Booked',label:'Adujest if Booked'},
-   ],
-
-   Productused:[
-
-    {value:'Makeup forever',label:'Makeup forever'},
-    {value:'Huda Beauty',label:'Huda Beauty'},
-    {value:'NARS',label:'NARS'},
-    {value:'Charlotte',label:'Charlotte'},
-    {value:'Tilbury',label:'Tilbury'},
-    {value:'Revynaucoin',label:'Revynaucoin'},
-
-   ],
-
-   Noofemployees:[
-
-    {value:'10',label:'10'},
-   ],
-  
-
-   pricesinclusiveof:[
-
-    {value:'Hair styling',label:'Hair styling'},
-    {value:'Draping',label:'Draping'},
-    {value:'Nail polish change',label:'Nail polish change'},
-    {value:'Makeup',label:'Makeup'},
-    {value:'False Lashes',label:'False Lashes'},
-    
-   ],
-   paymentpolicy:[
-    {value:'50%-At the time of Booking',label:'50%-At the time of Booking'},
-    {value:'30%-On event date',label:'30%-On event Date'},
-    {value:'20%-Deliverable or Deliverd',label:'20%-Deliverable or Deliverd'},
-   ],
-
-  }
-
-
-
-
-   
-   
-=======
     deliveryDate: [
         { value: '1 to 3 days', label: '1 to 3 days' },
         { value: '1 week', label: '1 week' },
@@ -186,4 +118,3 @@ export const checkboxData = {
     ],
 
 }
->>>>>>> bb0c0d390400c1278c463435f846faf023fa7187
