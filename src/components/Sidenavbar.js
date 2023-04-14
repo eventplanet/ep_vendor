@@ -1,4 +1,4 @@
-import React, { useState, } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   MdDashboard, MdPeople, MdSubscriptions, MdOutlineProductionQuantityLimits, MdAccountBox, MdOutlineBusinessCenter,
   MdOutlineLibraryAdd, MdOutlineViewList
@@ -8,6 +8,26 @@ import { Link } from 'react-router-dom'
 import './style.min.css'
 import SidebarMenu from './SidebarMenu'
 const Sidenavbar = () => {
+  const [windowDimension, setWindowDimension] = useState(window.innerWidth);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const detectSize = () => {
+    setWindowDimension(window.innerWidth)
+    if (windowDimension < 768) {
+      setIsOpen(false)
+    } else {
+      setIsOpen(true)
+    }
+  }
+  useEffect(() => {
+    if (windowDimension < 768) {
+      setIsOpen(false)
+    }
+    window.addEventListener('resize', detectSize)
+    return () => {
+      window.removeEventListener('resize', detectSize)
+    }
+  }, [windowDimension])
   const [status, setStatus] = useState(false)
   const [item, setItem] = useState([
     {

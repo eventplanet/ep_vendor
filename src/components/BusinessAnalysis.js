@@ -78,12 +78,11 @@ const BusinessAnalysis = () => {
                                 {
                                     box.map((cur, index) => {
                                         return (
-                                            <div class="col-md-3 col-6">
+                                            <div class="col-md-3 col-6" key={index}>
                                                 <div class=" p-10  text-center total_card shadow-sm ">
 
                                                     <div className='data d-flex justify-content-around'>
-                                                        <img src={cur.url} className='dash_icon'
-                                                        />
+                                                        <img src={cur.url} className='dash_icon' alt="Event Planet" />
                                                         <h4 class="">{cur.quatity}</h4>
                                                     </div>
                                                     <p class=" p-2">{cur.title}</p>
@@ -111,8 +110,8 @@ const BusinessAnalysis = () => {
                                     </ul>
                                     <span> Share Via
                                         <a href="https://api.whatsapp.com/send?text=https://eventplanet.in/" target="_blank"><FaWhatsappSquare className='watsapp' /></a>
-                                        <a href="https://facebook.com/share.php?u=https://eventplanet.in/" target="_blank"><FaFacebookSquare className='facebook' /></a>
-                                        <a href="http://twitter.com/share?text=Event%20Planet&url=https://eventplanet.in/" target="_blank"><FaTwitterSquare className='twitter' /></a>
+                                        <a href="https://facebook.com/share.php?u=https://eventplanet.in/" target="_blank" rel="noreferrer"><FaFacebookSquare className='facebook' /></a>
+                                        <a href="http://twitter.com/share?text=Event%20Planet&url=https://eventplanet.in/" target="_blank" rel="noreferrer"><FaTwitterSquare className='twitter' /></a>
                                     </span>
                                     <div className='card_footer'>
                                         <center> <h4>Get your custom domain <AiFillRightCircle className='rightarrow' /></h4></center>

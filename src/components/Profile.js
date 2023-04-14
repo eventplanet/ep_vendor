@@ -16,6 +16,7 @@ import VenueTTK from './thingstoknow/VenueTTK';
 import PhotographyTTK from './thingstoknow/PhotographyTTK';
 import './thingstoknow/style.css'
 import DecoratorsTTK from './thingstoknow/DecoratorsTTK';
+import BridalmakeupTTK from './thingstoknow/BridalmakeupTTK';
 const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [progresspercent, setProgresspercent] = useState(0);
@@ -288,6 +289,7 @@ const Profile = () => {
             case 'WgPT5AjEU6y3lnpxxkIq': return <VenueTTK />
             case '8EaQ32WZPPKQHhCb0rHa': return <PhotographyTTK />
             case 'cL3ML2kGQq73UwopisjS': return <DecoratorsTTK />
+            case 'REgfHYF9tUNeip9MoIiJ': return <BridalmakeupTTK />
             default: return <Skeleton />
         }
     }

@@ -48,7 +48,7 @@ const AddStaf = () => {
 
     const btnHandler = async () => {
         const { name, contact, date, amount, salarytype } = data;
-        if (name != '' && contact != "" && date != "" && amount != "" && salarytype != "") {
+        if (name !== '' && contact !== "" && date !== "" && amount !== "" && salarytype !== "") {
             try {
                 await setDoc(doc(init.db, "merchants", merchant_id), {
                     ...merchant,
@@ -63,15 +63,17 @@ const AddStaf = () => {
                     role: ''
                 })
                 toast.success('Data Updated Successfully');
+                handleClose()
             } catch (err) {
                 console.log(err);
             }
 
+
         }
         else {
-            alert('please fill your all field')
+            toast.error('please fill your all field');
         }
-        handleClose()
+
     }
     return (
         <>
@@ -220,13 +222,14 @@ const AddStaf = () => {
                                 <div className='card-body'>
                                     <div className='table-responsive'>
                                         <table className='table  table-bordered  shadow-sm mt-3' cellPadding={5}>
-                                            <tr >
-                                                <th>Name</th>
-                                                <th>Contact Number</th>
-                                                <th>Salary Colculation date</th>
-                                                <th>Salary Type</th>
-                                                <th>Amount</th>
-                                                <th>Role</th>
+                                            <tr style={{ backgroundColor: '#f6fbff' }}>
+                                                <th style={{ fontWeight: 'bold' }}>S.No.</th>
+                                                <th style={{ fontWeight: 'bold' }}>Name</th>
+                                                <th style={{ fontWeight: 'bold' }}>Contact Number</th>
+                                                <th style={{ fontWeight: 'bold' }}>Salary Colculation date</th>
+                                                <th style={{ fontWeight: 'bold' }}>Salary Type</th>
+                                                <th style={{ fontWeight: 'bold' }}>Amount</th>
+                                                <th style={{ fontWeight: 'bold' }}>Role</th>
                                             </tr>
                                             {loading && (
                                                 <>
@@ -237,13 +240,6 @@ const AddStaf = () => {
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
-                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
-                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
-                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
-                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                     </tr>
                                                     <tr>
@@ -253,6 +249,16 @@ const AddStaf = () => {
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                     </tr>
                                                     <tr>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
@@ -261,8 +267,10 @@ const AddStaf = () => {
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                     </tr>
                                                     <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
                                                         <td><Skeleton count="1" style={{ width: "100%" }} /></td>
@@ -276,6 +284,7 @@ const AddStaf = () => {
                                                 staff?.map((cur, index) => {
                                                     return (
                                                         <tr key={index}>
+                                                            <td>{index + 1}</td>
                                                             <td>{cur.name}</td>
                                                             <td>{cur.contact}</td>
                                                             <td>{cur.date}</td>
