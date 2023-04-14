@@ -14,6 +14,9 @@ import avatar from '../assets/avatar.png'
 import VenueTTK from './thingstoknow/VenueTTK';
 import PhotographyTTK from './thingstoknow/PhotographyTTK';
 import './thingstoknow/style.css'
+import BridalmakeupTTK from './thingstoknow/BridalmakeupTTK';
+import CateringTTK from './thingstoknow/CateringTTK';
+
 const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [progresspercent, setProgresspercent] = useState(0);
@@ -284,6 +287,7 @@ const Profile = () => {
             case 'Gsj5h6LfHMqWKbbWDdeh': return <VenueTTK />
             case 'WgPT5AjEU6y3lnpxxkIq': return <VenueTTK />
             case '8EaQ32WZPPKQHhCb0rHa': return <PhotographyTTK />
+            case 'REgfHYF9tUNeip9MoIiJ': return <BridalmakeupTTK/>
             default: return <Skeleton />
         }
     }
@@ -697,7 +701,9 @@ const Profile = () => {
                 </div>
 
                 <div className='row'>
-                    {thingsToKnowFinder()}
+                <>
+                <BridalmakeupTTK/>
+                  </>   
                 </div>
 
             </div>
