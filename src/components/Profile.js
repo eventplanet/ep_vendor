@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Line, Circle } from 'rc-progress';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { doc, setDoc, getDoc, getDocs, collection } from 'firebase/firestore';
@@ -14,9 +15,6 @@ import avatar from '../assets/avatar.png'
 import VenueTTK from './thingstoknow/VenueTTK';
 import PhotographyTTK from './thingstoknow/PhotographyTTK';
 import './thingstoknow/style.css'
-import BridalmakeupTTK from './thingstoknow/BridalmakeupTTK';
-import CateringTTK from './thingstoknow/CateringTTK';
-
 const Profile = () => {
     const [edit, setEdit] = useState(false)
     const [progresspercent, setProgresspercent] = useState(0);
@@ -203,6 +201,7 @@ const Profile = () => {
                     introduction: ''
                 })
                 getSingleDocumentHandler()
+                setEdit(!edit)
             } catch (err) {
                 console.log(err)
             }
@@ -287,9 +286,36 @@ const Profile = () => {
             case 'Gsj5h6LfHMqWKbbWDdeh': return <VenueTTK />
             case 'WgPT5AjEU6y3lnpxxkIq': return <VenueTTK />
             case '8EaQ32WZPPKQHhCb0rHa': return <PhotographyTTK />
-            case 'REgfHYF9tUNeip9MoIiJ': return <BridalmakeupTTK/>
             default: return <Skeleton />
         }
+    }
+    const [showAll, setShowAll] = useState(false);
+
+    const showMore = () => setShowAll(true);
+    const showLess = () => setShowAll(false);
+    const LongText = ({ content, limit }) => {
+        const [showAll, setShowAll] = useState(false);
+
+        const showMore = () => setShowAll(true);
+        const showLess = () => setShowAll(false);
+
+        if (content?.length <= limit) {
+            // there is nothing more to show
+            return <div>{content}</div>
+        }
+        if (showAll) {
+            // We show the extended text and a link to reduce it
+            return <div>
+                {content}
+                <b onClick={showLess} style={{ cursor: 'pointer' }}>Read less</b>
+            </div>
+        }
+        // In the final case, we show a text with ellipsis and a `Read more` button
+        const toShow = content?.substring(0, limit) + "...";
+        return <div>
+            {toShow}
+            <b onClick={showMore} style={{ cursor: 'pointer' }}>Read more</b>
+        </div>
     }
     return (
         <div className="page-wrapper">
@@ -299,6 +325,9 @@ const Profile = () => {
                         <div className="card">
                             <div className='card-header bg-white'>
                                 <h3>Profile</h3>
+                                {/* <div style={{ height: '150px', width: '150px' }}>
+                                    <Circle percent={90} strokeWidth={4} strokeColor="skyblue" />
+                                </div> */}
                             </div>
                             <div className='card-body'>
                                 {
@@ -312,7 +341,7 @@ const Profile = () => {
                                                             <div className='col-md-3 text-center'>
                                                                 <div style={{ position: 'relative' }}>
                                                                     {loading ? <Skeleton style={{ height: '200px', width: '200px', borderRadius: '50%', }} /> : (
-                                                                        <img src={merchant.profilePicture?.image || avatar} style={{ height: '200px', width: '200px', borderRadius: '50%', border: '2px solid skyblue', overflow: 'hidden' }} />
+                                                                        <img src={merchant.profilePicture?.image || avatar} className='profile_picture' />
                                                                     )
                                                                     }
 
@@ -370,7 +399,7 @@ const Profile = () => {
                                                                                     {
                                                                                         subCategory.map((item, index) => {
                                                                                             return (
-                                                                                                <option value={item.id} selected={(item.cat_id === merchant.serviceId)} key={index}>{item.sub_cat_name}</option>
+                                                                                                <option value={item.id} selected={(item.id === merchant.sub_cat_id)} key={index}>{item.sub_cat_name}</option>
                                                                                             )
                                                                                         })
                                                                                     }
@@ -384,7 +413,10 @@ const Profile = () => {
                                                                 </div>
                                                                 <p style={{ marginBottom: '-5px', fontWeight: 'bold', fontSize: '22px' }}>About Us</p>
                                                                 {loading ? <Skeleton count={5} /> : (
-                                                                    <p style={{ textAlign: 'justify', border: '2px solid #41B0FA', padding: '8px', borderRadius: '10px', color: 'rgba(0,0,0,0.5)' }}>{data.introduction}</p>
+                                                                    <p style={{ textAlign: 'justify', border: '2px solid #41B0FA', padding: '8px', borderRadius: '10px', color: 'rgba(0,0,0,0.5)' }}>
+
+                                                                        <LongText content={data.introduction} limit={200} />
+                                                                    </p>
                                                                 )
                                                                 }
 
@@ -396,7 +428,8 @@ const Profile = () => {
                                                                     <h3>Complete Your Business Profile</h3>
                                                                 </div>
                                                                 {
-                                                                    merchant.vendorProfile && (
+                                                                    merchant.vendorProfile &&
+                                                                    (
                                                                         <>
                                                                             <div className='table-responsive'>
                                                                                 <table className='table text-center ttk_preview' cellPadding={0} cellSpacing={0} style={{ border: '1px solid #fff ' }}>
@@ -434,7 +467,7 @@ const Profile = () => {
                                                                                                 })
                                                                                             }
                                                                                         </td>
-                                                                                        <td>{merchant.vendorProfile.pincode}</td>
+                                                                                        <td>{merchant.vendorProfile?.pincode}</td>
                                                                                     </tr>
                                                                                     <tr style={{ color: '#41B0FA' }}>
                                                                                         <th>Locality</th>
@@ -452,9 +485,9 @@ const Profile = () => {
                                                                                                 })
                                                                                             }
                                                                                         </td>
-                                                                                        <td>{merchant.vendorProfile.street}</td>
-                                                                                        <td>Lko</td>
-                                                                                        <td>{merchant.vendorProfile.landmark}</td>
+                                                                                        <td>{merchant.vendorProfile?.street}</td>
+                                                                                        <td>{merchant.vendorProfile?.landmark}</td>
+                                                                                        <td>{merchant.vendorProfile?.email}</td>
                                                                                     </tr>
                                                                                     <tr style={{ color: '#41B0FA' }}>
                                                                                         <th>Mobile Number</th>
@@ -463,20 +496,18 @@ const Profile = () => {
                                                                                         <th>Contact Person Name</th>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td>{merchant.vendorProfile.mobno}</td>
-                                                                                        <td>{merchant.vendorProfile.gst}</td>
-                                                                                        <td>{merchant.vendorProfile.workingSince}</td>
-                                                                                        <td>{merchant.vendorProfile.contactPersonName}</td>
+                                                                                        <td>{merchant.vendorProfile?.mobno}</td>
+                                                                                        <td>{merchant.vendorProfile?.gst}</td>
+                                                                                        <td>{merchant.vendorProfile?.workingSince}</td>
+                                                                                        <td>{merchant.vendorProfile?.contactPersonName}</td>
                                                                                     </tr>
                                                                                     <tr style={{ color: '#41B0FA' }}>
                                                                                         <th>Facebook Link</th>
                                                                                         <th>Instagram Link</th>
-                                                                                        <th colSpan={2}>Business Introduction</th>
                                                                                     </tr>
                                                                                     <tr>
-                                                                                        <td>{merchant.vendorProfile.fb}</td>
-                                                                                        <td>{merchant.vendorProfile.insta}</td>
-                                                                                        <td>{merchant.vendorProfile.introduction}</td>
+                                                                                        <td>{merchant.vendorProfile?.fb}</td>
+                                                                                        <td>{merchant.vendorProfile?.insta}</td>
                                                                                     </tr>
                                                                                 </table>
                                                                             </div>
@@ -670,7 +701,7 @@ const Profile = () => {
                                     </label>
                                 </div>
                                 <div className='col-md-2 col-6'>
-                                    <Link to="/dashboard/previous-work" style={{ textDecoration: 'none' }}>
+                                    <Link to="/dashboard/previous-work-list" style={{ textDecoration: 'none' }}>
                                         <div style={{ height: '100px', width: '100px', borderRadius: '10px', border: '2px solid rgba(0,0,0,0.3)', margin: '1px', display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', color: '#000' }}>
                                             <i className='fa fa-search' style={{ fontSize: '22px' }}></i>
                                             View All

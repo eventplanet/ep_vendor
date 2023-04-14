@@ -85,6 +85,7 @@ export const checkboxData = {
         { value: 'Limited Parking', label: 'Limited Parking' },
         { value: 'Large Parking Space', label: 'Large Parking Space' },
     ],
+<<<<<<< HEAD
     bridalMakeupPrice:[
             { value: '2100 per function', label:'2100 per function'},
 
@@ -151,3 +152,38 @@ export const checkboxData = {
 
    
    
+=======
+    deliveryDate: [
+        { value: '1 to 3 days', label: '1 to 3 days' },
+        { value: '1 week', label: '1 week' },
+        { value: '2 week', label: '2 week' },
+        { value: '1 Month ', label: '1 Month ' },
+    ],
+    serviceTypeDecor: [
+        { value: 'Floar Decor', label: 'Floar Decor' },
+    ],
+    experienceZoneDecor: [
+        { value: 'Local Weddings', label: 'Local Weddings' },
+    ],
+    onThePannalOfDecor: [
+        { value: 'Sapna Clarks Inn', label: 'Sapna Clarks Inn' },
+        { value: 'Levana', label: 'Levana' },
+        { value: 'Linege', label: 'Linege' },
+        { value: 'Picadily', label: 'Picadily' },
+        { value: 'Lebua', label: 'Lebua' },
+        { value: 'Hyatt', label: 'Hyatt' },
+        { value: 'Ramda', label: 'Ramda' },
+        { value: 'Savy Grand', label: 'Savy Grand' },
+    ],
+    planningTypeDecor: [
+        { value: 'Cordination', label: 'Cordination' },
+        { value: 'Full Partial Planning', label: 'Full Partial Planning' },
+        { value: 'Partial Planning', label: 'Partial Planning' }
+    ],
+    paymentPolicyDecor: [
+        { value: '70% At The Time of Booking', label: '70% At the Time of Booking' },
+        { value: '20% On Event Date', label: '20% On Event Date' },
+    ],
+
+}
+>>>>>>> bb0c0d390400c1278c463435f846faf023fa7187

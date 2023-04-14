@@ -1,6 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import init from './../firebase'
+import { useUserAuth } from '../context/UserAuthContext';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const AddStaf = () => {
+    const { user } = useUserAuth();
+    const merchant_id = user.uid;
+    const [merchant, setMerchant] = useState({});
+    const [staff, setStaff] = useState([])
+    const [loading, setLoading] = useState(true)
+    const getSingleDocumentHandler = async () => {
+        try {
+            const res = await getDoc(doc(init.db, "merchants", merchant_id));
+            setMerchant(res.data());
+            setStaff(res.data().staff);
+            setLoading(false)
+        } catch (error) {
+            console.log(`Error ${error}`)
+        }
+    }
+    useEffect(() => {
+        getSingleDocumentHandler()
+    }, [merchant_id, staff])
+
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
     const [data, setData] = useState({
         name: '',
         contact: '',
@@ -15,22 +46,162 @@ const AddStaf = () => {
         setData({ ...data, [name]: value })
     }
 
-    const [staflist, setStafList] = useState([])
-    console.log(staflist)
-
-    const btnHandler = () => {
+    const btnHandler = async () => {
         const { name, contact, date, amount, salarytype } = data;
-        if (name != '' && contact != "" && date != "" && amount != "" && salarytype != "") {
-            alert('Staff Added Successfully')
+        if (name !== '' && contact !== "" && date !== "" && amount !== "" && salarytype !== "") {
+            try {
+                await setDoc(doc(init.db, "merchants", merchant_id), {
+                    ...merchant,
+                    staff: [...merchant.staff, data]
+                }, { merge: true });
+                setData({
+                    name: '',
+                    contact: '',
+                    date: '',
+                    amount: '',
+                    salarytype: '',
+                    role: ''
+                })
+                toast.success('Data Updated Successfully');
+                handleClose()
+            } catch (err) {
+                console.log(err);
+            }
 
-            setStafList((predata) => [...predata, data])
+
         }
         else {
-            alert('please fill your all field')
+            toast.error('please fill your all field');
         }
+
     }
     return (
         <>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Add Staff</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="p-0">
+                    <form className="form-horizontal">
+                        <div className="card-body">
+                            <div className="form-group">
+                                <label
+                                    for="fname"
+                                    className=" text-start control-label col-form-label"
+                                >Full Name <span className='text-danger'>*</span></label>
+
+                                <input
+                                    onChange={formHandler} value={data.name}
+                                    name='name'
+                                    type="text"
+                                    className="form-control"
+                                    id="fname"
+                                    placeholder="Enter your name"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label
+                                    for="fname"
+                                    className=" text-start control-label col-form-label"
+                                >Contact Number<span className='text-danger'>*</span></label>
+                                <input
+                                    onChange={formHandler} value={data.contact}
+                                    type="text"
+                                    className="form-control"
+                                    name='contact'
+                                    placeholder="Contact Number"
+                                />
+
+                            </div>
+                            <div className="form-group">
+                                <label
+                                    for="fname"
+                                    className=" text-start control-label col-form-label"
+                                >Role <span className='text-danger'>*</span></label
+                                >
+                                <select className="form-select" id="floatingSelectGrid"
+                                    name='role'
+                                    onChange={formHandler} value={data.role}>
+                                    <option selected>Role</option>
+                                    <option value="employee">Staf</option>
+                                    <option value="manger">Contractor</option>
+                                    <option value="laber">Freelancer</option>
+                                </select>
+                            </div>
+
+
+                            <label
+                                for="fname"
+                                className=" text-start control-label col-form-label"
+                            >Salary Colculation Date<span className='text-danger'>*</span></label
+                            >
+                            <input
+                                onChange={formHandler}
+                                value={data.date}
+                                type="date"
+                                className="form-control"
+                                id="fname"
+                                placeholder="Salary Colculation Data"
+                                name='date'
+                            />
+                            <label
+                                for="fname"
+                                className=" text-start control-label col-form-label d-flex"
+                            >Salary Type<span className='text-danger'>*</span></label
+                            >
+
+                            <div className="form-check form-check-inline">
+                                <input
+                                    onChange={formHandler}
+                                    className="form-check-input" type="radio" name="salarytype"
+                                    id="inlineRadio1" value="monthly"
+                                    checked={data.salarytype === 'monthly'}
+                                />
+                                <label className="form-check-label" for="inlineRadio1">Monthly</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    onChange={formHandler}
+                                    checked={data.salarytype === 'daily'}
+                                    className="form-check-input" type="radio" name="salarytype" id="inlineRadio2" value="daily" />
+                                <label className="form-check-label" for="inlineRadio2">Daily</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                                <input
+                                    onChange={formHandler}
+                                    checked={data.salarytype === 'hourly'}
+                                    className="form-check-input" type="radio" name="salarytype" id="inlineRadio3" value="hourly"
+
+                                />
+                                <label className="form-check-label" for="inlineRadio3">Hourly</label>
+                            </div>
+
+
+
+                            <div className="form-group ">
+                                <label
+                                    for="fname"
+                                    className=" text-start control-label col-form-label"
+                                >Amount<span className='text-danger'>*</span></label>
+                                <input
+                                    onChange={formHandler}
+                                    value={data.amount}
+                                    type="number"
+                                    className="form-control"
+                                    id="fname"
+                                    placeholder="Enter Amount.."
+                                    name='amount'
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={btnHandler}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             <div className="page-wrapper">
                 <div className="container-fluid">
                     <div className="row">
@@ -41,175 +212,79 @@ const AddStaf = () => {
                                         <input type="text" placeholder='Search Product...' className='form-control' />
                                     </div>
                                     <div className='col-md-4'>
-                                        <button type="button" class="btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                            Add Staf
+                                        <button type="button" className="btn btn-primary" onClick={handleShow}>
+                                            Add Staff
                                         </button>
                                     </div>
                                 </div>
-                                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <center> <h1 class="modal-title fs-5" id="staticBackdropLabel">Staf Management</h1></center>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form class="form-horizontal">
-                                                    <div class="card-body">
-                                                        <div class="form-group row">
-                                                            <label
-                                                                for="fname"
-                                                                class=" text-start control-label col-form-label"
-                                                            >Full Name <span className='text-danger'>*</span></label>
-                                                            <div class="col-sm-12">
-                                                                <input
-                                                                    onChange={formHandler} value={data.name}
-                                                                    name='name'
-                                                                    type="text"
-                                                                    class="form-control"
-                                                                    id="fname"
-                                                                    placeholder="Enter your name"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label
-                                                                for="fname"
-                                                                class=" text-start control-label col-form-label"
-                                                            >Contect Nu.<span className='text-danger'>*</span></label
-                                                            >
 
-                                                            <div class="col-sm-12">
-                                                                <input
-                                                                    onChange={formHandler} value={data.contact}
-                                                                    type="text"
-                                                                    class="form-control"
-                                                                    id="fname"
-                                                                    name='contact'
-                                                                    placeholder="Contact Nu.."
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <label
-                                                                    for="fname"
-                                                                    class=" text-start control-label col-form-label"
-                                                                >Role <span className='text-danger'>*</span></label
-                                                                >
-                                                                <select class="form-select" id="floatingSelectGrid"
-                                                                    name='role'
-                                                                    onChange={formHandler} value={data.role}>
-                                                                    <option selected>Role</option>
-                                                                    <option value="employee">Staf</option>
-                                                                    <option value="manger">Contractor</option>
-                                                                    <option value="laber">Freelancer</option>
-                                                                </select>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class=" row">
-                                                            <label
-
-                                                                for="fname"
-                                                                class=" text-start control-label col-form-label"
-                                                            >Salary Colculation Date<span className='text-danger'>*</span></label
-                                                            >
-                                                            <div class="col-sm-12">
-                                                                <input
-                                                                    onChange={formHandler}
-                                                                    value={data.date}
-                                                                    type="date"
-                                                                    class="form-control"
-                                                                    id="fname"
-                                                                    placeholder="Salary Colculation Data"
-                                                                    name='date'
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <label
-                                                            for="fname"
-                                                            class=" text-start control-label col-form-label d-flex"
-                                                        >Salary Type<span className='text-danger'>*</span></label
-                                                        >
-
-                                                        <div class="form-check form-check-inline">
-                                                            <input
-                                                                onChange={formHandler}
-                                                                class="form-check-input" type="radio" name="salarytype"
-                                                                id="inlineRadio1" value="monthly"
-                                                                checked={data.salarytype === 'monthly'}
-                                                            />
-                                                            <label class="form-check-label" for="inlineRadio1">Monthly</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input
-                                                                onChange={formHandler}
-                                                                checked={data.salarytype === 'daily'}
-                                                                class="form-check-input" type="radio" name="salarytype" id="inlineRadio2" value="daily" />
-                                                            <label class="form-check-label" for="inlineRadio2">Daily</label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input
-                                                                onChange={formHandler}
-                                                                checked={data.salarytype === 'hourly'}
-                                                                class="form-check-input" type="radio" name="salarytype" id="inlineRadio3" value="hourly"
-
-                                                            />
-                                                            <label class="form-check-label" for="inlineRadio3">Hourly</label>
-                                                        </div>
-
-
-
-                                                        <div class="form-group row">
-                                                            <label
-                                                                for="fname"
-                                                                class=" text-start control-label col-form-label"
-                                                            >Amount<span className='text-danger'>*</span></label
-                                                            >
-                                                            <div class="col-sm-12">
-                                                                <input
-                                                                    onChange={formHandler}
-                                                                    value={data.amount}
-                                                                    type="number"
-                                                                    class="form-control"
-                                                                    id="fname"
-                                                                    placeholder="Enter Amount.."
-                                                                    name='amount'
-                                                                />
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" onClick={btnHandler} class="btn btn-primary" data-bs-dismiss="modal">
-                                                    Submit
-                                                </button>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <div className='card-body'>
                                     <div className='table-responsive'>
                                         <table className='table  table-bordered  shadow-sm mt-3' cellPadding={5}>
-                                            <tr >
-                                                <th>Name</th>
-                                                <th>Contact Number</th>
-                                                <th>Salary Colculation date</th>
-                                                <th>Salary Type</th>
-                                                <th>Amount</th>
-                                                <th>Role</th>
+                                            <tr style={{ backgroundColor: '#f6fbff' }}>
+                                                <th style={{ fontWeight: 'bold' }}>S.No.</th>
+                                                <th style={{ fontWeight: 'bold' }}>Name</th>
+                                                <th style={{ fontWeight: 'bold' }}>Contact Number</th>
+                                                <th style={{ fontWeight: 'bold' }}>Salary Colculation date</th>
+                                                <th style={{ fontWeight: 'bold' }}>Salary Type</th>
+                                                <th style={{ fontWeight: 'bold' }}>Amount</th>
+                                                <th style={{ fontWeight: 'bold' }}>Role</th>
                                             </tr>
+                                            {loading && (
+                                                <>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                        <td><Skeleton count="1" style={{ width: "100%" }} /></td>
+                                                    </tr>
+                                                </>
+                                            )}
                                             {
-                                                staflist.map((cur, index) => {
+                                                staff?.map((cur, index) => {
                                                     return (
-                                                        <tr>
+                                                        <tr key={index}>
+                                                            <td>{index + 1}</td>
                                                             <td>{cur.name}</td>
                                                             <td>{cur.contact}</td>
                                                             <td>{cur.date}</td>
@@ -230,6 +305,7 @@ const AddStaf = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </>
     )
 }

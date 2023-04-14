@@ -1,4 +1,4 @@
-import React, { useState, } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   MdDashboard, MdPeople, MdSubscriptions, MdOutlineProductionQuantityLimits, MdAccountBox, MdOutlineBusinessCenter,
   MdOutlineLibraryAdd, MdOutlineViewList
@@ -8,6 +8,26 @@ import { Link } from 'react-router-dom'
 import './style.min.css'
 import SidebarMenu from './SidebarMenu'
 const Sidenavbar = () => {
+  const [windowDimension, setWindowDimension] = useState(window.innerWidth);
+  const [isOpen, setIsOpen] = useState(true);
+
+  const detectSize = () => {
+    setWindowDimension(window.innerWidth)
+    if (windowDimension < 768) {
+      setIsOpen(false)
+    } else {
+      setIsOpen(true)
+    }
+  }
+  useEffect(() => {
+    if (windowDimension < 768) {
+      setIsOpen(false)
+    }
+    window.addEventListener('resize', detectSize)
+    return () => {
+      window.removeEventListener('resize', detectSize)
+    }
+  }, [windowDimension])
   const [status, setStatus] = useState(false)
   const [item, setItem] = useState([
     {
@@ -32,27 +52,27 @@ const Sidenavbar = () => {
       ]
     },
     {
-      title: "Staf Management",
+      title: "Staff Management",
       icon: <MdAccountBox className='my__nav__icon' />,
       dropDown: [
         {
-          title: "Manage Staaf",
+          title: "Manage Staff",
           icon: <MdDashboard className='my__nav__icon' />,
-          href: 'manage-staaf'
+          href: 'manage-staff'
         }
       ]
     },
-    {
-      title: "Business Management",
-      icon: <MdOutlineBusinessCenter className='my__nav__icon' />,
-      dropDown: [
-        {
-          title: "Add New Booking",
-          icon: <MdDashboard className='my__nav__icon' />,
-          href: 'add_new_booking'
-        }
-      ]
-    }
+    // {
+    //   title: "Business Management",
+    //   icon: <MdOutlineBusinessCenter className='my__nav__icon' />,
+    //   dropDown: [
+    //     {
+    //       title: "Add New Booking",
+    //       icon: <MdDashboard className='my__nav__icon' />,
+    //       href: 'add_new_booking'
+    //     }
+    //   ]
+    // }
   ])
   return (
     <aside className="left-sidebar" data-sidebarbg="skin5" >
@@ -75,6 +95,13 @@ const Sidenavbar = () => {
                 )
               })
             }
+            <li className="sidebar-item">
+              <Link
+                className="sidebar-link waves-effect waves-dark sidebar-link"
+                to="/dashboard/business-management"
+                aria-expanded="false"
+              ><MdOutlineBusinessCenter size={23} style={{ display: 'inline-block', color: 'white', textAlign: 'center', width: '35px' }} /><span className="hide-menu">Business Management</span></Link>
+            </li>
 
 
 

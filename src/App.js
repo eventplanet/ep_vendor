@@ -3,6 +3,8 @@ import { UserAuthContextProvider } from "./context/UserAuthContext";
 import Index from './components/Index';
 import { Routes, Route } from 'react-router-dom';
 import MyComponent from './MyComponent';
+import PreviousWorkSection from './components/PreviousWorkSection';
+import BusinessManagement from './components/BusinessManagement';
 const ProductList = lazy(() => import('./components/ProductList'));
 const ProtectedRoute = lazy(() => import('./ProtectedRoute'));
 const Home = lazy(() => import('./Home'));
@@ -39,19 +41,19 @@ function App() {
 
           <Route path='dashboard' element={<ProtectedRoute><Index /></ProtectedRoute>}>
             <Route path='dash_board' element={<BusinessAnalysis />} />
+            <Route path='business-management' element={<BusinessManagement />} />
             <Route path='profile' element={<Profile />} />
             <Route path='profile-picture' element={<ProfilePicture />} />
             <Route path='describe-business' element={<DescribeBusiness />} />
             <Route path='calendar' element={<Calendar />} />
-            <Route path='previous-work' element={<PreviousWork />} />
+            <Route path='previous-work' element={<PreviousWorkSection />} />
+            <Route path='previous-work-list' element={<PreviousWork />} />
             <Route path='product-list' element={<ProductList />} />
             <Route path='add-product' element={<AddProduct />} />
-            <Route path='manage-staaf' element={<AddStaf />} />
+            <Route path='manage-staff' element={<AddStaf />} />
             <Route path='add_new_booking' element={<AddNewBooking />} />
             <Route path='logout' element={<Logout />} />
-
           </Route>
-
         </Routes>
       </Suspense>
     </UserAuthContextProvider>

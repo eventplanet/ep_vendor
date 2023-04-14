@@ -30,6 +30,7 @@ const AddProduct = () => {
     const [progresspercent, setProgresspercent] = useState(0);
     const [subCategories, setSubCategories] = useState([]);
     const [data, setData] = useState({
+        sub_cat_id: '',
         name: '',
         price: '',
         quantity: '',
@@ -91,12 +92,14 @@ const AddProduct = () => {
         getSubCategories()
     }, [merchant_id])
     const btnHandler = async () => {
-        const { name, price, discountPrice, timeDuration, quantity, unit } = data;
+        const { name, price, discountPrice, timeDuration, quantity, unit, sub_cat_id } = data;
         if (name != '' && price != '' && discountPrice != '' && quantity != '' && unit != '') {
             try {
                 await setDoc(doc(init.db, "merchants", merchant_id), {
                     ...merchant,
                     products: [...merchant.products, {
+                        cat_id: merchant.serviceId,
+                        sub_cat_id,
                         name,
                         price,
                         quantity,
@@ -135,11 +138,15 @@ const AddProduct = () => {
                     <div className="col-md-12">
                         <div className="card">
                             <div className='card-header bg-white'>
-                                <select className='form-control'>
+                                <select className='form-control' name="sub_cat_id" onChange={formHandler}>
+                                    <option>Select Category</option>
                                     {
                                         subCategories?.filter((subCat) => subCat?.cat_id === merchant?.serviceId).map((item) => {
+
                                             return (
+
                                                 <option value={item.id}>{item.sub_cat_name}</option>
+
                                             )
                                         })
                                     }

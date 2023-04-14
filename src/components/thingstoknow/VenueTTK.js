@@ -35,6 +35,13 @@ const VenueTTK = () => {
             const res = await getDoc(doc(init.db, "merchants", merchant_id));
             setMerchant(res.data());
             setThinksToKnow(res.data().thingsToKnow)
+            setData({
+                parkingSize: res.data().thingsToKnow.parkingSize,
+                vegPrice: res.data().thingsToKnow.vegPrice,
+                nonVegPrice: res.data().thingsToKnow.nonVegPrice,
+                roomCount: res.data().thingsToKnow.roomCount,
+                avgRoomPrice: res.data().thingsToKnow.avgRoomPrice
+            })
         } catch (error) {
             console.log(`Error : ${error}`)
         }
@@ -79,10 +86,12 @@ const VenueTTK = () => {
                     roomCount: '',
                     avgRoomPrice: '',
                 });
+                setTtkEditMode(!ttkEditMode)
             } catch (err) {
                 console.log(`Error ${err}`)
             }
         } else {
+            //console.log(data)
             toast.error('Please fill all the mandetary field')
         }
     }
@@ -93,7 +102,7 @@ const VenueTTK = () => {
     const [catering, setCatering] = useState([])
     const [decorPolicy, setDecorPolicy] = useState([])
     const [alcoholPolicy, setAlcoholPolicy] = useState([])
-    const [djPoicy, setDjPolicy] = useState([])
+    const [djPolicy, setDjPolicy] = useState([])
     const workingSinceHandler = (e) => {
         setWorkingSince(e)
     }
@@ -146,11 +155,20 @@ const VenueTTK = () => {
                                                 }</td>
                                                 <td>{
                                                     merchant.thingsToKnow.parking?.map((item, index) => {
-                                                        return <p key={index}>{item.value}</p>
+                                                        return (
+                                                            <>
+                                                                <i className='fa fa-check text-success' />
+                                                                <span key={index}>{item.value} </span>
+                                                            </>
+                                                        )
                                                     })
                                                 }</td>
                                                 <td>{merchant.thingsToKnow.parkingSize}</td>
-                                                <td>&#8377;{merchant.thingsToKnow.vegPrice}</td>
+                                                <td>&#8377;{merchant.thingsToKnow.vegPrice}
+                                                    <small className='text-success' style={{
+                                                        fontWeight: 'bold'
+                                                    }}> Per Plate</small>
+                                                </td>
                                             </tr>
                                             <tr style={{ color: '#41B0FA' }}>
                                                 <th>Non Veg Price</th>
@@ -159,7 +177,11 @@ const VenueTTK = () => {
                                                 <th>Room Counts </th>
                                             </tr>
                                             <tr>
-                                                <td>{merchant.thingsToKnow.nonVegPrice}</td>
+                                                <td>&#8377; {merchant.thingsToKnow.nonVegPrice}
+                                                    <small className='text-success' style={{
+                                                        fontWeight: 'bold'
+                                                    }}> Per Plate</small>
+                                                </td>
                                                 <td>{
                                                     merchant.thingsToKnow.smallPartiesVenue
                                                         ?.map((item, index) => {
@@ -243,6 +265,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.workingSince}
                                                 options={workingSinceOption}
                                                 selected
                                                 onChange={workingSinceHandler}
@@ -256,6 +279,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.parking}
                                                 options={parkingOption}
                                                 selected
                                                 onChange={parkingHandler}
@@ -270,14 +294,14 @@ const VenueTTK = () => {
                                     </div>
                                     <div className='col-md-6'>
                                         <div className='form-group'>
-                                            <label>Veg Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Veg Price' name="vegPrice" value={data.vegPrice} onChange={formHandler} className='form-control' />
+                                            <label>Veg Price Per Plate<span className='text-danger'>*</span></label>
+                                            <input type='number' placeholder='Veg Price Per Plate' name="vegPrice" value={data.vegPrice || merchant.thingsToKnow.vegPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
                                         <div className='form-group'>
-                                            <label>Non Veg Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Non Veg Price' name="nonVegPrice" value={data.nonVegPrice} onChange={formHandler} className='form-control' />
+                                            <label>Non Veg Price Per Plate<span className='text-danger'>*</span></label>
+                                            <input type='number' placeholder='Non Veg Price Per Plate' name="nonVegPrice" value={data.nonVegPrice || merchant.thingsToKnow.nonVegPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
@@ -286,6 +310,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.smallPartiesVenue}
                                                 options={smallPartiesOption}
                                                 selected
                                                 onChange={smallPartiesVenueHandler}
@@ -299,6 +324,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.space}
                                                 options={spaceOption}
                                                 selected
                                                 onChange={spaceHandler}
@@ -308,13 +334,13 @@ const VenueTTK = () => {
                                     <div className='col-md-6'>
                                         <div className='form-group'>
                                             <label>Room Count <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Room Count' name="roomCount" value={data.roomCount} onChange={formHandler} className='form-control' />
+                                            <input type='number' placeholder='Room Count' name="roomCount" value={data.roomCount || merchant.thingsToKnow.roomCount} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
                                         <div className='form-group'>
                                             <label>Average Room Price <span className='text-danger'>*</span></label>
-                                            <input type='number' placeholder='Average Room Price' name="avgRoomPrice" value={data.avgRoomPrice} onChange={formHandler} className='form-control' />
+                                            <input type='number' placeholder='Average Room Price' name="avgRoomPrice" value={data.avgRoomPrice || merchant.thingsToKnow?.avgRoomPrice} onChange={formHandler} className='form-control' />
                                         </div>
                                     </div>
                                     <div className='col-md-6'>
@@ -324,6 +350,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.catering}
                                                 options={cateringPolicyOption}
                                                 selected
                                                 onChange={cateringHandler}
@@ -336,6 +363,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.decorPolicy}
                                                 options={decorPolicyOption}
                                                 selected
                                                 onChange={decorHandler}
@@ -348,6 +376,7 @@ const VenueTTK = () => {
                                             <Select
                                                 closeMenuOnSelect={false}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.alcoholPolicy}
                                                 options={alcoholPolicyOption}
                                                 selected
                                                 onChange={alcoholPolicyHandler}
@@ -359,8 +388,9 @@ const VenueTTK = () => {
                                         <div className='form-group'>
                                             <label>DJ Policy <span className='text-danger'>*</span></label>
                                             <Select
-                                                closeMenuOnSelect={false}
+                                                closeMenuOnSelect={true}
                                                 isMulti
+                                                defaultValue={merchant.thingsToKnow.djPolicy}
                                                 options={djPolicyOption}
                                                 selected
                                                 onChange={djPolicyHandler}
@@ -368,7 +398,7 @@ const VenueTTK = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='form-group'>
+                                <div className='form-group text-center'>
                                     <button className='btn btn-primary' >{ttkEditMode ? 'Save Changes' : 'Submit'}</button>
                                 </div>
                             </form>
